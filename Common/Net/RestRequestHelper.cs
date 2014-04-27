@@ -121,6 +121,17 @@ namespace Xciles.Common.Net
                         restResponse.StatusCode = response.StatusCode;
                     }
                 }
+                catch (JsonSerializationException ex)
+                {
+                    throw new RestRequestException
+                    {
+                        Information = "JsonSerializationException",
+                        StatusCode = HttpStatusCode.OK,
+                        WebExceptionStatus = WebExceptionStatus.UnknownError,
+                        Exception = ex,
+                        CommunicationResult = ECommunicationResult.SerializationError
+                    };
+                }
                 catch (WebException webException)
                 {
                     HandleWebException(webException);
@@ -170,48 +181,24 @@ namespace Xciles.Common.Net
                             var response = (HttpWebResponse)webException.Response;
                             using (var responseStream = response.GetResponseStream())
                             {
+                                string objectAsString = String.Empty;
                                 try
                                 {
                                     // todo: perhaps copy stream then try. Possible fix for iOS/Android NotSupportedException
                                     using (var reader = new StreamReader(responseStream))
                                     {
-                                        var objectAsString = reader.ReadToEnd();
+                                        objectAsString = reader.ReadToEnd();
                                         var exceptionResult = JsonConvert.DeserializeObject<ServiceExceptionResult>(objectAsString, _jsonSerializerSettings);
 
                                         restRequestException.ServiceExceptionResult = exceptionResult;
+                                        restRequestException.CommunicationResult = ECommunicationResult.ServiceException;
                                     }
                                 }
-                                catch (JsonException ex)
+                                catch (JsonSerializationException ex)
                                 {
-                                    try
-                                    {
-                                        responseStream.Seek(0, SeekOrigin.Begin);
-
-                                        string responseAsRawText = SeeResponseAsClearText(responseStream);
-
-                                        restRequestException.Information = responseAsRawText;
-                                        restRequestException.Exception = ex;
-                                    }
-                                    catch (NotSupportedException inEx)
-                                    {
-                                        restRequestException.Exception = inEx;
-                                    }
-                                }
-                                catch (SerializationException ex)
-                                {
-                                    try
-                                    {
-                                        responseStream.Seek(0, SeekOrigin.Begin);
-
-                                        string responseAsRawText = SeeResponseAsClearText(responseStream);
-
-                                        restRequestException.Information = responseAsRawText;
-                                        restRequestException.Exception = ex;
-                                    }
-                                    catch (NotSupportedException inEx)
-                                    {
-                                        restRequestException.Exception = inEx;
-                                    }
+                                    restRequestException.Information = objectAsString;
+                                    restRequestException.Exception = ex;
+                                    restRequestException.CommunicationResult = ECommunicationResult.SerializationError;
                                 }
                                 finally
                                 {
@@ -395,7 +382,6 @@ namespace Xciles.Common.Net
                         return String.Empty;
                 }
             }
-
         }
 
 
@@ -410,18 +396,6 @@ namespace Xciles.Common.Net
             };
 
             return await restRequest.ProcessRequest<T>();
-        }
-
-
-
-        private static string SeeResponseAsClearText(Stream responseStream)
-        {
-            var responseStreamLength = responseStream.Length;
-            var buffer = new byte[responseStreamLength];
-            responseStream.Read(buffer, 0, Convert.ToInt32(responseStreamLength));
-            var enc = new UTF8Encoding();
-            var response = enc.GetString(buffer, 0, buffer.Length);
-            return response;
         }
     }
 }

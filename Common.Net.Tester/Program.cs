@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Web.Tester.Domain;
 using Xciles.Common.Net;
 
 namespace Common.Net.Tester
@@ -16,31 +17,22 @@ namespace Common.Net.Tester
 
         static async Task MainAsync(string[] args)
         {
-            var list = await RestRequestHelper.ProcessGetRequest<Rootobject>("http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo", null);
+            var serviceUrl = "http://localhost:13580/api";
+
+            try
+            {
+                var list = await RestRequestHelper.ProcessGetRequest<IList<Person>>(String.Format("{0}/{1}", serviceUrl, "person"), null);
+                var single = await RestRequestHelper.ProcessGetRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"), null);
+            }
+            catch (RestRequestException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             Console.ReadKey();
         }
 
-        public class Rootobject
-        {
-            public IList<Geoname> geonames { get; set; }
-        }
-
-        public class Geoname
-        {
-            public string fcodeName { get; set; }
-            public string toponymName { get; set; }
-            public string countrycode { get; set; }
-            public string fcl { get; set; }
-            public string fclName { get; set; }
-            public string name { get; set; }
-            public string wikipedia { get; set; }
-            public float lng { get; set; }
-            public string fcode { get; set; }
-            public int geonameId { get; set; }
-            public float lat { get; set; }
-            public int population { get; set; }
-        }
+        
 
     }
 }

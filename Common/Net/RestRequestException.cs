@@ -12,6 +12,7 @@ namespace Xciles.Common.Net
         Failed = 4,
         ServiceException = 5,
         ProtocolError = 6,
+        SerializationError = 7,
         UnknownError = -1
     }
 
