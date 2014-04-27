@@ -38,5 +38,17 @@ namespace Common.Web.Tester.Controllers
                 }
             };
         }
+
+        public Person GetPerson(int id)
+        {
+            return new Person()
+            {
+                DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
+                Firstname = "First",
+                Lastname = "Person",
+                PhoneNumber = "0123456789",
+                SomeString = "This is just a string"
+            };
+        }
     }
 }
