@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Net.Tester", "Common.Net.Tester\Common.Net.Tester.csproj", "{91F4BA2A-CA4F-4FB2-9F6A-60C1F5085692}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LocalTester", "LocalTester", "{6611C856-90FE-4D9E-8F1F-88C28E2484AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Web.Tester", "Common.Web.Tester\Common.Web.Tester.csproj", "{22AC5593-20CD-4E45-B3B1-A1D1E5CC7D0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +25,16 @@ Global
 		{91F4BA2A-CA4F-4FB2-9F6A-60C1F5085692}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91F4BA2A-CA4F-4FB2-9F6A-60C1F5085692}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91F4BA2A-CA4F-4FB2-9F6A-60C1F5085692}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22AC5593-20CD-4E45-B3B1-A1D1E5CC7D0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22AC5593-20CD-4E45-B3B1-A1D1E5CC7D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22AC5593-20CD-4E45-B3B1-A1D1E5CC7D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22AC5593-20CD-4E45-B3B1-A1D1E5CC7D0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{91F4BA2A-CA4F-4FB2-9F6A-60C1F5085692} = {6611C856-90FE-4D9E-8F1F-88C28E2484AA}
+		{22AC5593-20CD-4E45-B3B1-A1D1E5CC7D0B} = {6611C856-90FE-4D9E-8F1F-88C28E2484AA}
 	EndGlobalSection
 EndGlobal
