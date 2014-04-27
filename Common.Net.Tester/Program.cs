@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.Web.Tester.Domain;
+using Xciles.Common.Web.Tester.Domain;
 
 namespace Xciles.Common.Net.Tester
 {
