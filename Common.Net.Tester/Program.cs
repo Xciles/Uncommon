@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Common.Web.Tester.Domain;
-using Xciles.Common.Net;
 
-namespace Common.Net.Tester
+namespace Xciles.Common.Net.Tester
 {
     class Program
     {

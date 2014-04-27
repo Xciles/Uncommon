@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
-namespace Common.Web.Tester
+namespace Xciles.Common.Web.Tester
 {
     public class FilterConfig
     {

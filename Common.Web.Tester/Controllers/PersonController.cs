@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using Common.Web.Tester.Domain;
+using Xciles.Common.Web.Tester.Domain;
 
-namespace Common.Web.Tester.Controllers
+namespace Xciles.Common.Web.Tester.Controllers
 {
     [RoutePrefix("api/person")]
     public class PersonController : ApiController

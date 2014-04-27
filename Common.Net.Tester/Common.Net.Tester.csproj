@@ -7,7 +7,7 @@
     <ProjectGuid>{91F4BA2A-CA4F-4FB2-9F6A-60C1F5085692}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Common.Net.Tester</RootNamespace>
+    <RootNamespace>Xciles.Common.Net.Tester</RootNamespace>
     <AssemblyName>Common.Net.Tester</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
