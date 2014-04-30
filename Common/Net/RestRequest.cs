@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -10,6 +12,9 @@ using Xciles.Common.Security;
 
 namespace Xciles.Common.Net
 {
+    internal class NoResponseContent { }
+    internal class NoRequestContent { }
+
     public class RestRequest
     {
         private Timer _timer;
@@ -56,9 +61,9 @@ namespace Xciles.Common.Net
             }
         }
 
-        #endregion 
+        #endregion
 
-        public async Task<RestResponse<T>> ProcessRequest<T>()
+        public async Task<RestResponse<T>> ProcessRequest<T, TR>(TR requestContent)
         {
             var restResponse = new RestResponse<T>();
 
@@ -91,6 +96,15 @@ namespace Xciles.Common.Net
 
             try
             {
+                if (!EqualityComparer<TR>.Default.Equals(requestContent, default(TR)))
+                {
+                    using (var requestStream = await _request.GetRequestStreamAsync())
+                    {
+                        byte[] requestBody = GetRequestBody(requestContent);
+                        requestStream.Write(requestBody, 0, requestBody.Length);
+                    }
+                }
+
                 using (var response = await _request.GetResponseAsync() as HttpWebResponse)
                 {
                     StopTimer();
@@ -122,6 +136,66 @@ namespace Xciles.Common.Net
             }
 
             return restResponse;
+        }
+
+        public async Task<RestResponse<T>> ProcessRequest<T>()
+        {
+            return await ProcessRequest<T, NoRequestContent>(null);
+        }
+
+        private byte[] GetRequestBody<TR>(TR requestContent)
+        {
+            byte[] requestBody = null;
+
+            switch (Options.RequestSerializer)
+            {
+                case ERequestSerializer.UseXmlDataContractSerializer:
+                    requestBody = ConvertModelObjectByDataContactXmlToByteArray(requestContent);
+                    break;
+                case ERequestSerializer.UseXmlSerializer:
+                    requestBody = ConvertModelObjectByXmlToByteArray(requestContent);
+                    break;
+                case ERequestSerializer.UseByteArray:
+                    requestBody = requestContent as byte[];
+                    break;
+                case ERequestSerializer.UseJsonNet:
+                    {
+                        requestBody = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(requestContent));
+                    }
+                    break;
+                case ERequestSerializer.UseStringUrlPost:
+                    {
+                        requestBody = Encoding.UTF8.GetBytes(requestContent.ToString());
+                    }
+                    break;
+                default:
+                    // Return value null indicates that wrong RequestSerializer settings are used.
+                    break;
+            }
+
+            return requestBody;
+        }
+
+        private static byte[] ConvertModelObjectByDataContactXmlToByteArray<TContentType>(TContentType modelObject)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                var serializer = new DataContractSerializer(typeof(TContentType));
+                serializer.WriteObject(memoryStream, modelObject);
+
+                return memoryStream.ToArray();
+            }
+        }
+
+        private static byte[] ConvertModelObjectByXmlToByteArray<TContentType>(TContentType modelObject)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                var serializer = new XmlSerializer(typeof(TContentType));
+                serializer.Serialize(memoryStream, modelObject);
+
+                return memoryStream.ToArray();
+            }
         }
 
         private static void HandleWebException(WebException webException)
@@ -206,7 +280,7 @@ namespace Xciles.Common.Net
             switch (Options.ResponseSerializer)
             {
                 case EResponseSerializer.UseXmlDataContractSerializer:
-                    restResponse.Result = ConvertResponseToModelObjectFromDataContract<T>(response);
+                    restResponse.Result = ConvertResponseToModelObjectFromDataContractXml<T>(response);
                     break;
                 case EResponseSerializer.UseXmlSerializer:
                     restResponse.Result = ConvertResponseToModelObjectFromXml<T>(response);
@@ -258,7 +332,7 @@ namespace Xciles.Common.Net
             return restResponse;
         }
 
-        private static TContentType ConvertResponseToModelObjectFromDataContract<TContentType>(HttpWebResponse response)
+        private static TContentType ConvertResponseToModelObjectFromDataContractXml<TContentType>(HttpWebResponse response)
         {
             TContentType result;
 
