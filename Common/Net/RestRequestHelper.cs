@@ -5,22 +5,35 @@ namespace Xciles.Common.Net
 {
     public class RestRequestHelper
     {
-        private static ISecurityContext _sc;
-
-
-        
+        public static ISecurityContext SecurityContext { get; set; }
 
         public static async Task<RestResponse<T>> ProcessGetRequest<T>(string restRequestUri, object state, RestRequestOptions options = null)
         {
             var restRequest = new RestRequest
             {
                 State = state,
-                Options = options ?? new RestRequestOptions(),
+                Options = SetRestRequestOptions(options),
                 RestRequestUri = restRequestUri,
                 RestMethod = ERestMethod.GET
             };
 
             return await restRequest.ProcessRequest<T>();
+        }
+
+
+
+
+        private static RestRequestOptions SetRestRequestOptions(RestRequestOptions options)
+        {
+            options = options ?? new RestRequestOptions();
+
+            if (SecurityContext != null && options.SecurityContext == null)
+            {
+                options.SecurityContext = SecurityContext;
+                options.Authorized = true;
+            }
+
+            return options;
         }
     }
 }

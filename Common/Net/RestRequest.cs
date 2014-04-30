@@ -76,7 +76,7 @@ namespace Xciles.Common.Net
                 _request.Headers = Options.Headers;
             }
 
-            if (Options.Authorized)
+            if (Options.Authorized || Options.SecurityContext != null)
             {
                 ISecurityContext securityContext = Options.SecurityContext;
                 _request.Headers[HttpRequestHeader.Authorization] = securityContext.GenerateAuthorizationHeader();
