@@ -3,6 +3,7 @@
     public enum ERestMethod
     {
         GET,
+        HEAD,
         POST,
         PUT,
         PATCH,
