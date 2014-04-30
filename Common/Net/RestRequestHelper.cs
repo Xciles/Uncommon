@@ -41,11 +41,25 @@ namespace Xciles.Common.Net
             return await restRequest.ProcessRequest<T, TR>(requestContent);
         }
 
+        public static async Task<RestResponse<NoResponseContent>> ProcessPutRequest<TR>(string restRequestUri, object state, TR requestContent, RestRequestOptions options = null)
+        {
+            var restRequest = CreateRestRequest(ERestMethod.POST, restRequestUri, state, options);
+
+            return await restRequest.ProcessRequest<NoResponseContent, TR>(requestContent);
+        }
+
         public static async Task<RestResponse<T>> ProcessPutRequest<T, TR>(string restRequestUri, object state, TR requestContent, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.PUT, restRequestUri, state, options);
 
             return await restRequest.ProcessRequest<T, TR>(requestContent);
+        }
+
+        public static async Task<RestResponse<NoResponseContent>> ProcessPatchRequest<TR>(string restRequestUri, object state, TR requestContent, RestRequestOptions options = null)
+        {
+            var restRequest = CreateRestRequest(ERestMethod.POST, restRequestUri, state, options);
+
+            return await restRequest.ProcessRequest<NoResponseContent, TR>(requestContent);
         }
 
         public static async Task<RestResponse<T>> ProcessPatchRequest<T, TR>(string restRequestUri, object state, TR requestContent, RestRequestOptions options = null)

@@ -2,6 +2,7 @@
 
 namespace Xciles.Common.Web.Tester.Domain
 {
+    [Serializable]
     public class Person
     {
         public string Firstname { get; set; }
