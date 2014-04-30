@@ -20,6 +20,26 @@ namespace Xciles.Common.Net
             return await restRequest.ProcessRequest<T>();
         }
 
+        public static async Task<RestResponse<byte[]>> ProcessRawGetRequest(string restRequestUri, object state, RestRequestOptions options = null)
+        {
+            var restRequest = new RestRequest
+            {
+                State = state,
+                Options = SetRestRequestOptions(options),
+                RestRequestUri = restRequestUri,
+                RestMethod = ERestMethod.GET,
+            };
+
+            restRequest.Options.ResponseSerializer = EResponseSerializer.UseByteArray;
+
+            var result = await restRequest.ProcessRequest<byte[]>();
+
+            result.Result = result.RawResponseContent;
+
+            return result;
+        }
+
+
 
 
 
