@@ -12,7 +12,7 @@ using Xciles.Common.Security;
 
 namespace Xciles.Common.Net
 {
-    internal class NoResponseContent { }
+    public class NoResponseContent { }
     internal class NoRequestContent { }
 
     public class RestRequest
@@ -143,6 +143,9 @@ namespace Xciles.Common.Net
             return await ProcessRequest<T, NoRequestContent>(null);
         }
 
+
+        #region Request methods
+
         private byte[] GetRequestBody<TR>(TR requestContent)
         {
             byte[] requestBody = null;
@@ -176,6 +179,36 @@ namespace Xciles.Common.Net
             return requestBody;
         }
 
+        private static string CreateContentTypeHeader(ERequestSerializer eRequestSerializer)
+        {
+            switch (eRequestSerializer)
+            {
+                case ERequestSerializer.UseXmlDataContractSerializer:
+                case ERequestSerializer.UseXmlSerializer:
+                    return "application/xml";
+                case ERequestSerializer.UseJsonNet:
+                    return "application/json;charset=UTF-8";
+                case ERequestSerializer.UseStringUrlPost:
+                    return "application/x-www-form-urlencoded;charset=UTF-8";
+                default:
+                    return String.Empty;
+            }
+        }
+
+        private static string CreateAcceptHeader(EResponseSerializer eResponseSerializer)
+        {
+            switch (eResponseSerializer)
+            {
+                case EResponseSerializer.UseXmlDataContractSerializer:
+                case EResponseSerializer.UseXmlSerializer:
+                    return "application/xml";
+                case EResponseSerializer.UseJsonNet:
+                    return "application/json;charset=UTF-8";
+                default:
+                    return String.Empty;
+            }
+        }
+
         private static byte[] ConvertModelObjectByDataContactXmlToByteArray<TContentType>(TContentType modelObject)
         {
             using (var memoryStream = new MemoryStream())
@@ -196,6 +229,71 @@ namespace Xciles.Common.Net
 
                 return memoryStream.ToArray();
             }
+        }
+
+        #endregion
+
+
+
+        #region Response methods
+
+        private async Task<RestResponse<T>> HandleResponseContent<T>(HttpWebResponse response)
+        {
+            var restResponse = new RestResponse<T>();
+
+            switch (Options.ResponseSerializer)
+            {
+                case EResponseSerializer.UseXmlDataContractSerializer:
+                    restResponse.Result = ConvertResponseToModelObjectFromDataContractXml<T>(response);
+                    break;
+                case EResponseSerializer.UseXmlSerializer:
+                    restResponse.Result = ConvertResponseToModelObjectFromXml<T>(response);
+                    break;
+                case EResponseSerializer.UseJsonNet:
+                    {
+                        using (var responseStream = response.GetResponseStream())
+                        {
+                            using (var reader = new StreamReader(responseStream))
+                            {
+                                var objectAsString = await reader.ReadToEndAsync();
+                                restResponse.Result = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(objectAsString, _jsonSerializerSettings));
+                            }
+                        }
+                    }
+                    break;
+                case EResponseSerializer.UseByteArray:
+                    {
+                        using (Stream stream = response.GetResponseStream())
+                        {
+                            // http://www.yoda.arachsys.com/csharp/readbinary.html
+                            restResponse.RawResponseContent = await ReadFullyAsync(stream, response.ContentLength);
+                        }
+                    }
+                    break;
+                default:
+                    // Wrong ResponseSerializer settings are used: response is not set.
+                    // Possibly set an error ;)
+                    break;
+            }
+
+            CookieContainer cookies = null;
+            if (response.Cookies.Count > 0)
+            {
+                cookies = new CookieContainer();
+                foreach (Cookie c in response.Cookies)
+                {
+                    if (c.Domain[0] == '.' && c.Domain.Substring(1) == response.ResponseUri.Host)
+                    {
+                        c.Domain = c.Domain.TrimStart(new[] { '.' });
+                    }
+                    cookies.Add(new Uri(response.ResponseUri.Scheme + "://" + response.ResponseUri.Host), c);
+                }
+            }
+
+            restResponse.CookieContainer = cookies;
+            restResponse.StatusCode = response.StatusCode;
+
+            return restResponse;
         }
 
         private static void HandleWebException(WebException webException)
@@ -271,65 +369,6 @@ namespace Xciles.Common.Net
 
                     throw restRequestException;
             }
-        }
-
-        private async Task<RestResponse<T>> HandleResponseContent<T>(HttpWebResponse response)
-        {
-            var restResponse = new RestResponse<T>();
-
-            switch (Options.ResponseSerializer)
-            {
-                case EResponseSerializer.UseXmlDataContractSerializer:
-                    restResponse.Result = ConvertResponseToModelObjectFromDataContractXml<T>(response);
-                    break;
-                case EResponseSerializer.UseXmlSerializer:
-                    restResponse.Result = ConvertResponseToModelObjectFromXml<T>(response);
-                    break;
-                case EResponseSerializer.UseJsonNet:
-                    {
-                        using (var responseStream = response.GetResponseStream())
-                        {
-                            using (var reader = new StreamReader(responseStream))
-                            {
-                                var objectAsString = await reader.ReadToEndAsync();
-                                restResponse.Result = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(objectAsString, _jsonSerializerSettings));
-                            }
-                        }
-                    }
-                    break;
-                case EResponseSerializer.UseByteArray:
-                    {
-                        using (Stream stream = response.GetResponseStream())
-                        {
-                            // http://www.yoda.arachsys.com/csharp/readbinary.html
-                            restResponse.RawResponseContent = await ReadFullyAsync(stream, response.ContentLength);
-                        }
-                    }
-                    break;
-                default:
-                    // Wrong ResponseSerializer settings are used: response is not set.
-                    // Possibly set an error ;)
-                    break;
-            }
-
-            CookieContainer cookies = null;
-            if (response.Cookies.Count > 0)
-            {
-                cookies = new CookieContainer();
-                foreach (Cookie c in response.Cookies)
-                {
-                    if (c.Domain[0] == '.' && c.Domain.Substring(1) == response.ResponseUri.Host)
-                    {
-                        c.Domain = c.Domain.TrimStart(new[] { '.' });
-                    }
-                    cookies.Add(new Uri(response.ResponseUri.Scheme + "://" + response.ResponseUri.Host), c);
-                }
-            }
-
-            restResponse.CookieContainer = cookies;
-            restResponse.StatusCode = response.StatusCode;
-
-            return restResponse;
         }
 
         private static TContentType ConvertResponseToModelObjectFromDataContractXml<TContentType>(HttpWebResponse response)
@@ -409,34 +448,7 @@ namespace Xciles.Common.Net
             return ret;
         }
 
-        private static string CreateContentTypeHeader(ERequestSerializer eRequestSerializer)
-        {
-            switch (eRequestSerializer)
-            {
-                case ERequestSerializer.UseXmlDataContractSerializer:
-                case ERequestSerializer.UseXmlSerializer:
-                    return "application/xml";
-                case ERequestSerializer.UseJsonNet:
-                    return "application/json;charset=UTF-8";
-                case ERequestSerializer.UseStringUrlPost:
-                    return "application/x-www-form-urlencoded;charset=UTF-8";
-                default:
-                    return String.Empty;
-            }
-        }
+        #endregion
 
-        private static string CreateAcceptHeader(EResponseSerializer eResponseSerializer)
-        {
-            switch (eResponseSerializer)
-            {
-                case EResponseSerializer.UseXmlDataContractSerializer:
-                case EResponseSerializer.UseXmlSerializer:
-                    return "application/xml";
-                case EResponseSerializer.UseJsonNet:
-                    return "application/json;charset=UTF-8";
-                default:
-                    return String.Empty;
-            }
-        }
     }
 }

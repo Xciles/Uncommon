@@ -46,26 +46,13 @@ namespace Xciles.Common.Net
                 State = state,
                 Options = SetRestRequestOptions(options),
                 RestRequestUri = restRequestUri,
-                RestMethod = ERestMethod.GET
+                RestMethod = ERestMethod.POST
             };
 
-            return await restRequest.ProcessRequest<NoResponseContent>(requestContent);
+            return await restRequest.ProcessRequest<NoResponseContent, TR>(requestContent);
         }
 
-
-        //public static void ProcessPostRequest<TRequestContent>(string restRequestUri, object state, TRequestContent requestContent, Action<object> restSuccessAsyncCallback, Action<object, ECommunicationResult, ExceptionResult> restErrorAsyncCallback, RestRequestOptions options = null)
-        //{
-        //    var restRequest = new RestRequest<TRequestContent, NoContentType>
-        //    {
-        //        State = state,
-        //        Options = options ?? new RestRequestOptions(),
-        //        RequestContent = requestContent,
-        //        RestSuccessAsyncCallback = restSuccessAsyncCallback,
-        //        RestErrorAsyncCallback = restErrorAsyncCallback
-        //    };
-
-        //    BeginRestRequest("POST", restRequestUri, restRequest);
-        //}
+        
 
 
         private static RestRequestOptions SetRestRequestOptions(RestRequestOptions options)
