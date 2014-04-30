@@ -3,26 +3,6 @@ using Xciles.Common.Security;
 
 namespace Xciles.Common.Net
 {
-    public enum ERequestSerializer
-    {
-        Undefined,
-        UseXmlDataContractSerializer,
-        UseXmlSerializer,
-        UseByteArray,
-        UseJsonNet,
-        UseStringUrlPost
-    }
-
-    public enum EResponseSerializer
-    {
-        Undefined,
-        UseXmlDataContractSerializer,
-        UseXmlSerializer,
-        UseWikiXmlSerializer,
-        UseJsonNet,
-        UseByteArray
-    }
-
     public class RestRequestOptions
     {
         public bool Authorized { get; set; }
