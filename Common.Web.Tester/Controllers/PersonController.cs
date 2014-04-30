@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
 using System.Web.Http;
+using Xciles.Common.Web.Tester.Attributes;
 using Xciles.Common.Web.Tester.Domain;
 
 namespace Xciles.Common.Web.Tester.Controllers
@@ -84,6 +85,21 @@ namespace Xciles.Common.Web.Tester.Controllers
             result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
             return result;
+        }
+
+        [HttpPost]
+        [Route("badrequest")]
+        [ExceptionHandling]
+        public HttpRequestMessage PostBadRequest(Person person)
+        {
+            throw new ServiceExceptionResult()
+            {
+                Message = "Well something went wrong!...",
+                MessageDetail = "Something Wrong!",
+                ExceptionResultTypeValue = "PersonError",
+                HttpStatusCode = HttpStatusCode.BadRequest,
+                StackTrace = "No"
+            };
         }
 
         [HttpPost]

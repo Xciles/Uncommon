@@ -122,7 +122,10 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Utils\HttpErrorHelper.cs" />
+    <Compile Include="Attributes\ExceptionHandlingAttribute.cs" />
     <Compile Include="Domain\Person.cs" />
+    <Compile Include="Domain\ServiceExceptionResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

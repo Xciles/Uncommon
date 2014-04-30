@@ -32,8 +32,9 @@ namespace Xciles.Common.Net.Tester
                 var patch = await RestRequestHelper.ProcessPatchRequest(String.Format("{0}/{1}", serviceUrl, "person"), null, single.Result);
                 var patchResult = await RestRequestHelper.ProcessPatchRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"), null, single.Result);
 
+                var badRequest = await RestRequestHelper.ProcessPostRequest<Person>(String.Format("{0}/{1}", serviceUrl, "badrequest"), null, single.Result);
 
-                var willFail = await RestRequestHelper.ProcessGetRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"), null);
+                var willFailAlsoFail = await RestRequestHelper.ProcessGetRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"), null);
             }
             catch (RestRequestException ex)
             {
