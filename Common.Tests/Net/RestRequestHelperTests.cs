@@ -5,7 +5,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Fakes;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Global.Fakes;
 using Microsoft.QualityTools.Testing.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -25,44 +27,55 @@ namespace Xciles.Common.Tests.Net
     [TestClass]
     public class RestRequestHelperTests
     {
+        private MemoryStream bla;
+
         [TestMethod]
-        public async void GetTest()
+        public void GetTest()
+        {
+            GetTestAsync().Wait();
+        }
+
+        private async Task GetTestAsync()
         {
             using (ShimsContext.Create())
             {
-                ShimHttpWebResponse res = new ShimHttpWebResponse();
-                res.StatusCodeGet = () => HttpStatusCode.OK;
-                res.GetResponseStream = () =>
+                var person = new Person()
                 {
-                    var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new Person()
+                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
+                    Firstname = "First",
+                    Lastname = "Person",
+                    PhoneNumber = "0123456789",
+                    SomeString = "This is just a string"
+                };
+
+
+                ShimHttpWebResponse res = new ShimHttpWebResponse
+                {
+                    StatusCodeGet = () => HttpStatusCode.OK,
+                    GetResponseStream = () =>
                     {
-                        DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                        Firstname = "First",
-                        Lastname = "Person",
-                        PhoneNumber = "0123456789",
-                        SomeString = "This is just a string"
-                    }));
+                        var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(person));
 
-                    var stream = new MemoryStream(bytes);
+                        var stream = new MemoryStream(bytes);
 
-                    return stream;
+                        return stream;
+                    },
+                    CookiesGet = () => new CookieCollection()
                 };
 
-                ShimHttpWebRequest.AllInstances.GetResponse = request =>
+                ShimAsyncExtensions.GetResponseAsyncWebRequest = request =>
                 {
-                    return res;
+                    return Task.FromResult((WebResponse)res.Instance);
                 };
 
+                var single = await RestRequestHelper.ProcessGetRequest<Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), null);
 
-                //ShimHttpWebRequest.AllInstances.async = (request, result) =>
-                //{
-                //    return res;
-                //};
-
-                var list = await RestRequestHelper.ProcessGetRequest<Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), null);
-
-
+                Assert.AreEqual(person.Firstname, single.Result.Firstname);
+                Assert.AreEqual(person.Lastname, single.Result.Lastname);
+                Assert.AreEqual(person.PhoneNumber, single.Result.PhoneNumber);
+                Assert.IsTrue(single.StatusCode == HttpStatusCode.OK);
             }
         }
+
     }
 }
