@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http;
-using System.Security.Authentication;
 using System.Web.Http;
 using System.Web.Http.Filters;
 using Xciles.Common.Web.Tester.Domain;

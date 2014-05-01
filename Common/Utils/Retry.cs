@@ -9,12 +9,12 @@ namespace Xciles.Common.Utils
     {
         public static async Task DoAsync(Func<Task> action, TimeSpan retryInterval, int retryCount = 3)
         {
-            await DoAsync(action, retryInterval, CancellationToken.None, retryCount);
+            await DoAsync(action, retryInterval, CancellationToken.None, retryCount).ConfigureAwait(false);
         }
 
         public static async Task DoAsync(Func<Task> action, Func<Task> retryWhen, int retryCount = 3)
         {
-            await DoAsync(action, retryWhen, CancellationToken.None, retryCount);
+            await DoAsync(action, retryWhen, CancellationToken.None, retryCount).ConfigureAwait(false);
         }
 
         public static async Task DoAsync(Func<Task> action, TimeSpan retryInterval, CancellationToken ct, int retryCount = 3)
@@ -23,7 +23,7 @@ namespace Xciles.Common.Utils
             {
                 action();
                 return null;
-            }, () => TaskEx.Delay(retryInterval, ct), ct, retryCount);
+            }, () => TaskEx.Delay(retryInterval, ct), ct, retryCount).ConfigureAwait(false);
         }
 
         public static async Task DoAsync(Func<Task> action, Func<Task> retryWhen, CancellationToken ct, int retryCount = 3)
@@ -32,23 +32,22 @@ namespace Xciles.Common.Utils
             {
                 action();
                 return null;
-            }, retryWhen, ct, retryCount);
+            }, retryWhen, ct, retryCount).ConfigureAwait(false);
         }
-
 
         public static async Task<T> DoAsync<T>(Func<Task<T>> action, TimeSpan retryInterval, int retryCount = 3)
         {
-            return await DoAsync(action, () => TaskEx.Delay(retryInterval), CancellationToken.None, retryCount);
+            return await DoAsync(action, () => TaskEx.Delay(retryInterval), CancellationToken.None, retryCount).ConfigureAwait(false);
         }
 
         public static async Task<T> DoAsync<T>(Func<Task<T>> action, TimeSpan retryInterval, CancellationToken ct, int retryCount = 3)
         {
-            return await DoAsync(action, () => TaskEx.Delay(retryInterval, ct), ct, retryCount);
+            return await DoAsync(action, () => TaskEx.Delay(retryInterval, ct), ct, retryCount).ConfigureAwait(false);
         }
 
         public static async Task<T> DoAsync<T>(Func<Task<T>> action, Func<Task> retryWhen, int retryCount = 3)
         {
-            return await DoAsync(action, retryWhen, CancellationToken.None, retryCount);
+            return await DoAsync(action, retryWhen, CancellationToken.None, retryCount).ConfigureAwait(false);
         }
 
         public static async Task<T> DoAsync<T>(Func<Task<T>> action, Func<Task> retryWhen, CancellationToken ct, int retryCount = 3)

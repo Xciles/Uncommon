@@ -11,7 +11,7 @@ namespace Xciles.Common.Net
         {
             var restRequest = CreateRestRequest(ERestMethod.GET, restRequestUri, state, options);
 
-            return await restRequest.ProcessRequest<T>();
+            return await restRequest.ProcessRequest<T>().ConfigureAwait(false);
         }
 
         public static async Task<RestResponse<byte[]>> ProcessRawGetRequest(string restRequestUri, object state, RestRequestOptions options = null)
@@ -20,60 +20,60 @@ namespace Xciles.Common.Net
 
             restRequest.Options.ResponseSerializer = EResponseSerializer.UseByteArray;
 
-            var result = await restRequest.ProcessRequest<byte[]>();
+            var result = await restRequest.ProcessRequest<byte[]>().ConfigureAwait(false);
 
             result.Result = result.RawResponseContent;
 
             return result;
         }
 
-        public static async Task<RestResponse<NoResponseContent>> ProcessPostRequest<TR>(string restRequestUri, object state, TR requestContent, RestRequestOptions options = null)
+        public static async Task<RestResponse<NoResponseContent>> ProcessPostRequest<TRequestType>(string restRequestUri, object state, TRequestType requestContent, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.POST, restRequestUri, state, options);
 
-            return await restRequest.ProcessRequest<NoResponseContent, TR>(requestContent);
+            return await restRequest.ProcessRequest<TRequestType, NoResponseContent>(requestContent).ConfigureAwait(false);
         }
 
-        public static async Task<RestResponse<T>> ProcessPostRequest<T,TR>(string restRequestUri, object state, TR requestContent, RestRequestOptions options = null)
+        public static async Task<RestResponse<TResponseType>> ProcessPostRequest<TResponseType,TRequestType>(string restRequestUri, object state, TRequestType requestContent, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.POST, restRequestUri, state, options);
 
-            return await restRequest.ProcessRequest<T, TR>(requestContent);
+            return await restRequest.ProcessRequest<TRequestType, TResponseType>(requestContent).ConfigureAwait(false);
         }
 
-        public static async Task<RestResponse<NoResponseContent>> ProcessPutRequest<TR>(string restRequestUri, object state, TR requestContent, RestRequestOptions options = null)
+        public static async Task<RestResponse<NoResponseContent>> ProcessPutRequest<TRequestType>(string restRequestUri, object state, TRequestType requestContent, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.POST, restRequestUri, state, options);
 
-            return await restRequest.ProcessRequest<NoResponseContent, TR>(requestContent);
+            return await restRequest.ProcessRequest<TRequestType, NoResponseContent>(requestContent).ConfigureAwait(false);
         }
 
-        public static async Task<RestResponse<T>> ProcessPutRequest<T, TR>(string restRequestUri, object state, TR requestContent, RestRequestOptions options = null)
+        public static async Task<RestResponse<TResponseType>> ProcessPutRequest<TResponseType, TRequestType>(string restRequestUri, object state, TRequestType requestContent, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.PUT, restRequestUri, state, options);
 
-            return await restRequest.ProcessRequest<T, TR>(requestContent);
+            return await restRequest.ProcessRequest<TRequestType, TResponseType>(requestContent).ConfigureAwait(false);
         }
 
-        public static async Task<RestResponse<NoResponseContent>> ProcessPatchRequest<TR>(string restRequestUri, object state, TR requestContent, RestRequestOptions options = null)
+        public static async Task<RestResponse<NoResponseContent>> ProcessPatchRequest<TRequestType>(string restRequestUri, object state, TRequestType requestContent, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.POST, restRequestUri, state, options);
 
-            return await restRequest.ProcessRequest<NoResponseContent, TR>(requestContent);
+            return await restRequest.ProcessRequest<TRequestType, NoResponseContent>(requestContent).ConfigureAwait(false);
         }
 
-        public static async Task<RestResponse<T>> ProcessPatchRequest<T, TR>(string restRequestUri, object state, TR requestContent, RestRequestOptions options = null)
+        public static async Task<RestResponse<TResponseType>> ProcessPatchRequest<TResponseType, TRequestType>(string restRequestUri, object state, TRequestType requestContent, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.PATCH, restRequestUri, state, options);
 
-            return await restRequest.ProcessRequest<T, TR>(requestContent);
+            return await restRequest.ProcessRequest<TRequestType, TResponseType>(requestContent).ConfigureAwait(false);
         }
 
-        public static async Task<RestResponse<T>> ProcessDeleteRequest<T, TR>(string restRequestUri, object state, TR requestContent, RestRequestOptions options = null)
+        public static async Task<RestResponse<TResponseType>> ProcessDeleteRequest<TResponseType, TRequestType>(string restRequestUri, object state, TRequestType requestContent, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.DELETE, restRequestUri, state, options);
 
-            return await restRequest.ProcessRequest<T, TR>(requestContent);
+            return await restRequest.ProcessRequest<TRequestType, TResponseType>(requestContent).ConfigureAwait(false);
         }
 
 

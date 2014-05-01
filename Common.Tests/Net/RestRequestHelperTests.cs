@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Fakes;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Global.Fakes;
 using Microsoft.QualityTools.Testing.Fakes;
@@ -27,8 +24,6 @@ namespace Xciles.Common.Tests.Net
     [TestClass]
     public class RestRequestHelperTests
     {
-        private MemoryStream bla;
-
         [TestMethod]
         public void GetTest()
         {
@@ -39,7 +34,7 @@ namespace Xciles.Common.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person()
+                var person = new Person
                 {
                     DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
                     Firstname = "First",

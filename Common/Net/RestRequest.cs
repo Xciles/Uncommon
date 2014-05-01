@@ -8,12 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
-using Xciles.Common.Security;
 
 namespace Xciles.Common.Net
 {
-    public class NoResponseContent { }
     internal class NoRequestContent { }
+    public class NoResponseContent { }
 
     public class RestRequest
     {
@@ -34,7 +33,7 @@ namespace Xciles.Common.Net
             };
         }
 
-        #region Timer things...
+        #region Timer/timeout things...
 
         private void StartTimer()
         {
@@ -63,9 +62,9 @@ namespace Xciles.Common.Net
 
         #endregion
 
-        public async Task<RestResponse<T>> ProcessRequest<T, TR>(TR requestContent)
+        public async Task<RestResponse<TResponseType>> ProcessRequest<TRequestType, TResponseType>(TRequestType requestContent)
         {
-            var restResponse = new RestResponse<T>();
+            var restResponse = new RestResponse<TResponseType>();
 
             var requestUri = new Uri(RestRequestUri);
 
@@ -74,7 +73,9 @@ namespace Xciles.Common.Net
             _request.Accept = CreateAcceptHeader(Options.ResponseSerializer);
 
             if (RestMethod != ERestMethod.GET)
+            {
                 _request.ContentType = CreateContentTypeHeader(Options.RequestSerializer);
+            }
 
             if (Options.Headers != null)
             {
@@ -83,8 +84,7 @@ namespace Xciles.Common.Net
 
             if (Options.Authorized || Options.SecurityContext != null)
             {
-                ISecurityContext securityContext = Options.SecurityContext;
-                _request.Headers[HttpRequestHeader.Authorization] = securityContext.GenerateAuthorizationHeader();
+                _request.Headers[HttpRequestHeader.Authorization] = Options.SecurityContext.GenerateAuthorizationHeader();
             }
 
             if (Options.CookieContainer != null)
@@ -96,20 +96,20 @@ namespace Xciles.Common.Net
 
             try
             {
-                if (!EqualityComparer<TR>.Default.Equals(requestContent, default(TR)))
+                if (!EqualityComparer<TRequestType>.Default.Equals(requestContent, default(TRequestType)))
                 {
                     using (var requestStream = await _request.GetRequestStreamAsync().ConfigureAwait(false))
                     {
-                        byte[] requestBody = await GetRequestBody(requestContent);
+                        byte[] requestBody = await GetRequestBody(requestContent).ConfigureAwait(false);
                         await requestStream.WriteAsync(requestBody, 0, requestBody.Length).ConfigureAwait(false);
                     }
                 }
 
-                using (var response = await _request.GetResponseAsync() as HttpWebResponse)
+                using (var response = await _request.GetResponseAsync().ConfigureAwait(false) as HttpWebResponse)
                 {
                     StopTimer();
 
-                    restResponse = await HandleResponseContent<T>(response);
+                    restResponse = await HandleResponseContent<TResponseType>(response).ConfigureAwait(false);
                     restResponse.State = State;
                     restResponse.StatusCode = response.StatusCode;
                 }
@@ -138,32 +138,37 @@ namespace Xciles.Common.Net
             return restResponse;
         }
 
-        public async Task<RestResponse<T>> ProcessRequest<T>()
+        public async Task<RestResponse<TResponseType>> ProcessRequest<TResponseType>()
         {
-            return await ProcessRequest<T, NoRequestContent>(null);
+            return await ProcessRequest<NoRequestContent, TResponseType>(null).ConfigureAwait(false);
         }
-
 
         #region Request methods
 
-        private async Task<byte[]> GetRequestBody<TR>(TR requestContent)
+        private async Task<byte[]> GetRequestBody<TRequestType>(TRequestType requestContent)
         {
             byte[] requestBody = null;
 
             switch (Options.RequestSerializer)
             {
                 case ERequestSerializer.UseXmlDataContractSerializer:
-                    requestBody = await Task.Factory.StartNew(() => ConvertModelObjectByDataContactXmlToByteArray(requestContent));
+                    {
+                        requestBody = await Task.Factory.StartNew(() => ConvertModelObjectByDataContactXmlToByteArray(requestContent)).ConfigureAwait(false);
+                    }
                     break;
                 case ERequestSerializer.UseXmlSerializer:
-                    requestBody = await Task.Factory.StartNew(() => ConvertModelObjectByXmlToByteArray(requestContent));
+                    {
+                        requestBody = await Task.Factory.StartNew(() => ConvertModelObjectByXmlToByteArray(requestContent)).ConfigureAwait(false);
+                    }
                     break;
                 case ERequestSerializer.UseByteArray:
-                    requestBody = requestContent as byte[];
+                    {
+                        requestBody = requestContent as byte[];
+                    }
                     break;
                 case ERequestSerializer.UseJsonNet:
                     {
-                        requestBody = await Task.Factory.StartNew(() => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(requestContent)));
+                        requestBody = await Task.Factory.StartNew(() => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(requestContent))).ConfigureAwait(false);
                     }
                     break;
                 case ERequestSerializer.UseStringUrlPost:
@@ -179,9 +184,9 @@ namespace Xciles.Common.Net
             return requestBody;
         }
 
-        private static string CreateContentTypeHeader(ERequestSerializer eRequestSerializer)
+        private static string CreateContentTypeHeader(ERequestSerializer requestSerializer)
         {
-            switch (eRequestSerializer)
+            switch (requestSerializer)
             {
                 case ERequestSerializer.UseXmlDataContractSerializer:
                 case ERequestSerializer.UseXmlSerializer:
@@ -195,9 +200,9 @@ namespace Xciles.Common.Net
             }
         }
 
-        private static string CreateAcceptHeader(EResponseSerializer eResponseSerializer)
+        private static string CreateAcceptHeader(EResponseSerializer responseSerializer)
         {
-            switch (eResponseSerializer)
+            switch (responseSerializer)
             {
                 case EResponseSerializer.UseXmlDataContractSerializer:
                 case EResponseSerializer.UseXmlSerializer:
@@ -209,22 +214,22 @@ namespace Xciles.Common.Net
             }
         }
 
-        private static byte[] ConvertModelObjectByDataContactXmlToByteArray<TContentType>(TContentType modelObject)
+        private static byte[] ConvertModelObjectByDataContactXmlToByteArray<TRequestType>(TRequestType modelObject)
         {
             using (var memoryStream = new MemoryStream())
             {
-                var serializer = new DataContractSerializer(typeof(TContentType));
+                var serializer = new DataContractSerializer(typeof(TRequestType));
                 serializer.WriteObject(memoryStream, modelObject);
 
                 return memoryStream.ToArray();
             }
         }
 
-        private static byte[] ConvertModelObjectByXmlToByteArray<TContentType>(TContentType modelObject)
+        private static byte[] ConvertModelObjectByXmlToByteArray<TRequestType>(TRequestType modelObject)
         {
             using (var memoryStream = new MemoryStream())
             {
-                var serializer = new XmlSerializer(typeof(TContentType));
+                var serializer = new XmlSerializer(typeof(TRequestType));
                 serializer.Serialize(memoryStream, modelObject);
 
                 return memoryStream.ToArray();
@@ -237,17 +242,17 @@ namespace Xciles.Common.Net
 
         #region Response methods
 
-        private async Task<RestResponse<T>> HandleResponseContent<T>(HttpWebResponse response)
+        private async Task<RestResponse<TResponseType>> HandleResponseContent<TResponseType>(HttpWebResponse response)
         {
-            var restResponse = new RestResponse<T>();
+            var restResponse = new RestResponse<TResponseType>();
 
             switch (Options.ResponseSerializer)
             {
                 case EResponseSerializer.UseXmlDataContractSerializer:
-                    restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromDataContractXml<T>(response));
+                    restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromDataContractXml<TResponseType>(response)).ConfigureAwait(false);
                     break;
                 case EResponseSerializer.UseXmlSerializer:
-                    restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromXml<T>(response));
+                    restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromXml<TResponseType>(response)).ConfigureAwait(false);
                     break;
                 case EResponseSerializer.UseJsonNet:
                     {
@@ -255,8 +260,8 @@ namespace Xciles.Common.Net
                         {
                             using (var reader = new StreamReader(responseStream))
                             {
-                                var objectAsString = await reader.ReadToEndAsync();
-                                restResponse.Result = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(objectAsString, _jsonSerializerSettings));
+                                var objectAsString = await reader.ReadToEndAsync().ConfigureAwait(false);
+                                restResponse.Result = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<TResponseType>(objectAsString, _jsonSerializerSettings)).ConfigureAwait(false);
                             }
                         }
                     }
@@ -266,7 +271,7 @@ namespace Xciles.Common.Net
                         using (Stream stream = response.GetResponseStream())
                         {
                             // http://www.yoda.arachsys.com/csharp/readbinary.html
-                            restResponse.RawResponseContent = await ReadFullyAsync(stream, response.ContentLength);
+                            restResponse.RawResponseContent = await ReadFullyAsync(stream, response.ContentLength).ConfigureAwait(false);
                         }
                     }
                     break;
@@ -371,27 +376,27 @@ namespace Xciles.Common.Net
             }
         }
 
-        private static TContentType ConvertResponseToModelObjectFromDataContractXml<TContentType>(HttpWebResponse response)
+        private static TResponseType ConvertResponseToModelObjectFromDataContractXml<TResponseType>(HttpWebResponse response)
         {
-            TContentType result;
+            TResponseType result;
 
             using (var responseStream = response.GetResponseStream())
             {
-                var serializer = new DataContractSerializer(typeof(TContentType));
-                result = (TContentType)serializer.ReadObject(responseStream);
+                var serializer = new DataContractSerializer(typeof(TResponseType));
+                result = (TResponseType)serializer.ReadObject(responseStream);
             }
 
             return result;
         }
 
-        private static TContentType ConvertResponseToModelObjectFromXml<TContentType>(HttpWebResponse response)
+        private static TResponseType ConvertResponseToModelObjectFromXml<TResponseType>(HttpWebResponse response)
         {
-            TContentType result;
+            TResponseType result;
 
             using (var responseStream = response.GetResponseStream())
             {
-                var serializer = new XmlSerializer(typeof(TContentType));
-                result = (TContentType)serializer.Deserialize(responseStream);
+                var serializer = new XmlSerializer(typeof(TResponseType));
+                result = (TResponseType)serializer.Deserialize(responseStream);
             }
 
             return result;

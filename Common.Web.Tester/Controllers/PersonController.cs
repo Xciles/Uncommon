@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Web;
 using System.Web.Http;
 using Xciles.Common.Web.Tester.Attributes;
 using Xciles.Common.Web.Tester.Domain;
@@ -19,9 +18,9 @@ namespace Xciles.Common.Web.Tester.Controllers
         [Route("person")]
         public IList<Person> GetPersons()
         {
-            return new List<Person>()
+            return new List<Person>
             {
-                new Person()
+                new Person
                 {
                     DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800,1,1,1)),
                     Firstname = "First",
@@ -29,7 +28,7 @@ namespace Xciles.Common.Web.Tester.Controllers
                     PhoneNumber = "0123456789",
                     SomeString = "This is just a string"
                 }, 
-                new Person()
+                new Person
                 {
                     DateOfBirth = DateTime.Now.Subtract(new TimeSpan(1800,1,1,1)),
                     Firstname = "Second",
@@ -37,7 +36,7 @@ namespace Xciles.Common.Web.Tester.Controllers
                     PhoneNumber = "0123456789",
                     SomeString = "This is just a string"
                 },
-                new Person()
+                new Person
                 {
                     DateOfBirth = DateTime.Now.Subtract(new TimeSpan(2800,1,1,1)),
                     Firstname = "Thrid",
@@ -52,7 +51,7 @@ namespace Xciles.Common.Web.Tester.Controllers
         [Route("person/{id}")]
         public Person GetPerson(int id)
         {
-            return new Person()
+            return new Person
             {
                 DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
                 Firstname = "First",
@@ -66,7 +65,7 @@ namespace Xciles.Common.Web.Tester.Controllers
         [Route("personbytes/{id}")]
         public HttpResponseMessage GetPersonAsByteArray(int id)
         {
-            var person = new Person()
+            var person = new Person
             {
                 DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
                 Firstname = "First",
@@ -92,7 +91,7 @@ namespace Xciles.Common.Web.Tester.Controllers
         [ExceptionHandling]
         public HttpRequestMessage PostBadRequest(Person person)
         {
-            throw new ServiceExceptionResult()
+            throw new ServiceExceptionResult
             {
                 Message = "Well something went wrong!...",
                 MessageDetail = "Something Wrong!",
