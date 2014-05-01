@@ -98,10 +98,10 @@ namespace Xciles.Common.Net
             {
                 if (!EqualityComparer<TR>.Default.Equals(requestContent, default(TR)))
                 {
-                    using (var requestStream = await _request.GetRequestStreamAsync())
+                    using (var requestStream = await _request.GetRequestStreamAsync().ConfigureAwait(false))
                     {
-                        byte[] requestBody = GetRequestBody(requestContent);
-                        requestStream.Write(requestBody, 0, requestBody.Length);
+                        byte[] requestBody = await GetRequestBody(requestContent);
+                        await requestStream.WriteAsync(requestBody, 0, requestBody.Length).ConfigureAwait(false);
                     }
                 }
 
@@ -146,24 +146,24 @@ namespace Xciles.Common.Net
 
         #region Request methods
 
-        private byte[] GetRequestBody<TR>(TR requestContent)
+        private async Task<byte[]> GetRequestBody<TR>(TR requestContent)
         {
             byte[] requestBody = null;
 
             switch (Options.RequestSerializer)
             {
                 case ERequestSerializer.UseXmlDataContractSerializer:
-                    requestBody = ConvertModelObjectByDataContactXmlToByteArray(requestContent);
+                    requestBody = await Task.Factory.StartNew(() => ConvertModelObjectByDataContactXmlToByteArray(requestContent));
                     break;
                 case ERequestSerializer.UseXmlSerializer:
-                    requestBody = ConvertModelObjectByXmlToByteArray(requestContent);
+                    requestBody = await Task.Factory.StartNew(() => ConvertModelObjectByXmlToByteArray(requestContent));
                     break;
                 case ERequestSerializer.UseByteArray:
                     requestBody = requestContent as byte[];
                     break;
                 case ERequestSerializer.UseJsonNet:
                     {
-                        requestBody = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(requestContent));
+                        requestBody = await Task.Factory.StartNew(() => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(requestContent)));
                     }
                     break;
                 case ERequestSerializer.UseStringUrlPost:
@@ -244,10 +244,10 @@ namespace Xciles.Common.Net
             switch (Options.ResponseSerializer)
             {
                 case EResponseSerializer.UseXmlDataContractSerializer:
-                    restResponse.Result = ConvertResponseToModelObjectFromDataContractXml<T>(response);
+                    restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromDataContractXml<T>(response));
                     break;
                 case EResponseSerializer.UseXmlSerializer:
-                    restResponse.Result = ConvertResponseToModelObjectFromXml<T>(response);
+                    restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromXml<T>(response));
                     break;
                 case EResponseSerializer.UseJsonNet:
                     {

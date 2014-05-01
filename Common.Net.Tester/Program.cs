@@ -39,6 +39,12 @@ namespace Xciles.Common.Net.Tester
             catch (RestRequestException ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.WriteLine("---------");
+                Console.WriteLine(ex.ServiceExceptionResult.Message);
+                Console.WriteLine(ex.ServiceExceptionResult.MessageDetail);
+                Console.WriteLine(ex.ServiceExceptionResult.ExceptionResultTypeValue);
+                Console.WriteLine(ex.ServiceExceptionResult.StackTrace);
+                Console.WriteLine("---------");
             }
 
             Console.ReadKey();
