@@ -23,18 +23,18 @@ namespace Xciles.Common.Net.Tester
 
                 var bytes = await RestRequestHelper.ProcessRawGetRequest(String.Format("{0}/{1}", serviceUrl, "personbytes/1"), null);
 
-                var post = await RestRequestHelper.ProcessPostRequest(String.Format("{0}/{1}", serviceUrl, "person"), null, single.Result);
-                var postResult = await RestRequestHelper.ProcessPostRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"), null, single.Result);
+                var post = await RestRequestHelper.ProcessPostRequest(String.Format("{0}/{1}", serviceUrl, "person"), single.Result);
+                var postResult = await RestRequestHelper.ProcessPostRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"), single.Result);
 
-                var put = await RestRequestHelper.ProcessPutRequest(String.Format("{0}/{1}", serviceUrl, "person"), null, single.Result);
-                var putResult = await RestRequestHelper.ProcessPutRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"), null, single.Result);
+                var put = await RestRequestHelper.ProcessPutRequest(String.Format("{0}/{1}", serviceUrl, "person"), single.Result);
+                var putResult = await RestRequestHelper.ProcessPutRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"), single.Result);
 
-                var patch = await RestRequestHelper.ProcessPatchRequest(String.Format("{0}/{1}", serviceUrl, "person"), null, single.Result);
-                var patchResult = await RestRequestHelper.ProcessPatchRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"), null, single.Result);
+                var patch = await RestRequestHelper.ProcessPatchRequest(String.Format("{0}/{1}", serviceUrl, "person"), single.Result);
+                var patchResult = await RestRequestHelper.ProcessPatchRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"), single.Result);
 
-                var badRequest = await RestRequestHelper.ProcessPostRequest<Person>(String.Format("{0}/{1}", serviceUrl, "badrequest"), null, single.Result);
+                var badRequest = await RestRequestHelper.ProcessPostRequest<Person>(String.Format("{0}/{1}", serviceUrl, "badrequest"), single.Result);
 
-                var willFailAlsoFail = await RestRequestHelper.ProcessGetRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"), null);
+                var willFailAlsoFail = await RestRequestHelper.ProcessGetRequest<Person>(String.Format("{0}/{1}", serviceUrl, "person"));
             }
             catch (RestRequestException ex)
             {
