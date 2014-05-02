@@ -7,11 +7,11 @@ namespace Xciles.Common.Net
     {
         public static ISecurityContext SecurityContext { get; set; }
 
-        public static async Task<RestResponse<T>> ProcessGetRequest<T>(string restRequestUri, object state = null, RestRequestOptions options = null)
+        public static async Task<RestResponse<TResponseType>> ProcessGetRequest<TResponseType>(string restRequestUri, object state = null, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.GET, restRequestUri, state, options);
 
-            return await restRequest.ProcessRequest<T>().ConfigureAwait(false);
+            return await restRequest.ProcessRequest<TResponseType>().ConfigureAwait(false);
         }
 
         public static async Task<RestResponse<byte[]>> ProcessRawGetRequest(string restRequestUri, object state = null, RestRequestOptions options = null)
@@ -34,7 +34,7 @@ namespace Xciles.Common.Net
             return await restRequest.ProcessRequest<TRequestType, NoResponseContent>(requestContent).ConfigureAwait(false);
         }
 
-        public static async Task<RestResponse<TResponseType>> ProcessPostRequest<TResponseType, TRequestType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
+        public static async Task<RestResponse<TResponseType>> ProcessPostRequest<TRequestType, TResponseType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.POST, restRequestUri, state, options);
 
@@ -48,7 +48,7 @@ namespace Xciles.Common.Net
             return await restRequest.ProcessRequest<TRequestType, NoResponseContent>(requestContent).ConfigureAwait(false);
         }
 
-        public static async Task<RestResponse<TResponseType>> ProcessPutRequest<TResponseType, TRequestType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
+        public static async Task<RestResponse<TResponseType>> ProcessPutRequest<TRequestType, TResponseType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.PUT, restRequestUri, state, options);
 
@@ -62,14 +62,21 @@ namespace Xciles.Common.Net
             return await restRequest.ProcessRequest<TRequestType, NoResponseContent>(requestContent).ConfigureAwait(false);
         }
 
-        public static async Task<RestResponse<TResponseType>> ProcessPatchRequest<TResponseType, TRequestType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
+        public static async Task<RestResponse<TResponseType>> ProcessPatchRequest<TRequestType, TResponseType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.PATCH, restRequestUri, state, options);
 
             return await restRequest.ProcessRequest<TRequestType, TResponseType>(requestContent).ConfigureAwait(false);
         }
 
-        public static async Task<RestResponse<TResponseType>> ProcessDeleteRequest<TResponseType, TRequestType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
+        public static async Task<RestResponse<NoResponseContent>> ProcessDeleteRequest<TRequestType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
+        {
+            var restRequest = CreateRestRequest(ERestMethod.DELETE, restRequestUri, state, options);
+
+            return await restRequest.ProcessRequest<TRequestType, NoResponseContent>(requestContent).ConfigureAwait(false);
+        }
+
+        public static async Task<RestResponse<TResponseType>> ProcessDeleteRequest<TRequestType, TResponseType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.DELETE, restRequestUri, state, options);
 
