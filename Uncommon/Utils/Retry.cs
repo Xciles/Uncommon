@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xciles.Common.Utils
+namespace Xciles.Uncommon.Utils
 {
     public static class Retry
     {

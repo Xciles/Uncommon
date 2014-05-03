@@ -1,4 +1,4 @@
-﻿namespace Xciles.Common.Net
+﻿namespace Xciles.Uncommon.Net
 {
     public enum ERequestSerializer
     {

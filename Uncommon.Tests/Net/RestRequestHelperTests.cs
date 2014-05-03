@@ -8,9 +8,9 @@ using Global.Fakes;
 using Microsoft.QualityTools.Testing.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using Xciles.Common.Net;
+using Xciles.Uncommon.Net;
 
-namespace Xciles.Common.Tests.Net
+namespace Xciles.Uncommon.Tests.Net
 {
     public class Person
     {

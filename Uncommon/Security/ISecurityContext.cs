@@ -1,4 +1,4 @@
-﻿namespace Xciles.Common.Security
+﻿namespace Xciles.Uncommon.Security
 {
     public interface ISecurityContext
     {

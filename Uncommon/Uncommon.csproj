@@ -8,8 +8,8 @@
     <ProjectGuid>{D39753B5-A5CE-4868-9F67-7B3714420768}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Xciles.Common</RootNamespace>
-    <AssemblyName>Xciles.Common</AssemblyName>
+    <RootNamespace>Xciles.Uncommon</RootNamespace>
+    <AssemblyName>Xciles.Uncommon</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile158</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>

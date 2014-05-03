@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-namespace Xciles.Common.Net
+namespace Xciles.Uncommon.Net
 {
     internal class NoRequestContent { }
     public class NoResponseContent { }

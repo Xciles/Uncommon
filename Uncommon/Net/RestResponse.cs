@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Xciles.Common.Net
+namespace Xciles.Uncommon.Net
 {
     public class RestResponse<T>
     {

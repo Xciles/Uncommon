@@ -1,7 +1,7 @@
 ﻿using System.Net;
-using Xciles.Common.Security;
+using Xciles.Uncommon.Security;
 
-namespace Xciles.Common.Net
+namespace Xciles.Uncommon.Net
 {
     public class RestRequestOptions
     {
