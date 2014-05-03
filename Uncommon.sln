@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{D39753B5-A5CE-4868-9F67-7B3714420768}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon", "Uncommon\Uncommon.csproj", "{D39753B5-A5CE-4868-9F67-7B3714420768}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Tests", "Common.Tests\Common.Tests.csproj", "{F8500B0F-34CB-4992-8C79-0CB8465AFAED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.Tests", "Uncommon.Tests\Uncommon.Tests.csproj", "{F8500B0F-34CB-4992-8C79-0CB8465AFAED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

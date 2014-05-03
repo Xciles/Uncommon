@@ -94,9 +94,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\Uncommon\Uncommon.csproj">
       <Project>{d39753b5-a5ce-4868-9f67-7b3714420768}</Project>
-      <Name>Common</Name>
+      <Name>UnCommon</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
