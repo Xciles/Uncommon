@@ -1,5 +1,5 @@
-Xciles.Common
-=============
+Xciles.Uncommon
+===============
 This is still a work in progress, dll's etc will be made available soon :)
 
 The project is a Portable Class Library (profile 158). This means that it is compatible and can be used with Xamarin (and mono) based projects.
