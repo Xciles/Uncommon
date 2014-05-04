@@ -102,7 +102,6 @@ namespace Xciles.Uncommon.Net
             if (SecurityContext != null && options.SecurityContext == null)
             {
                 options.SecurityContext = SecurityContext;
-                options.Authorized = true;
             }
 
             return options;

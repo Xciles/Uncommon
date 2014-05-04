@@ -82,7 +82,7 @@ namespace Xciles.Uncommon.Net
                 _request.Headers = Options.Headers;
             }
 
-            if (Options.Authorized || Options.SecurityContext != null)
+            if (Options.Authorized && Options.SecurityContext != null)
             {
                 _request.Headers[HttpRequestHeader.Authorization] = Options.SecurityContext.GenerateAuthorizationHeader();
             }
@@ -282,7 +282,7 @@ namespace Xciles.Uncommon.Net
             }
 
             CookieContainer cookies = null;
-            if (response.Cookies.Count > 0)
+            if (response.Cookies != null && response.Cookies.Count > 0)
             {
                 cookies = new CookieContainer();
                 foreach (Cookie c in response.Cookies)
