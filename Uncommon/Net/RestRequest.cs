@@ -246,15 +246,17 @@ namespace Xciles.Uncommon.Net
         {
             var restResponse = new RestResponse<TResponseType>();
 
-            switch (Options.ResponseSerializer)
+            if (typeof (TResponseType) != typeof (NoResponseContent))
             {
-                case EResponseSerializer.UseXmlDataContractSerializer:
-                    restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromDataContractXml<TResponseType>(response)).ConfigureAwait(false);
-                    break;
-                case EResponseSerializer.UseXmlSerializer:
-                    restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromXml<TResponseType>(response)).ConfigureAwait(false);
-                    break;
-                case EResponseSerializer.UseJsonNet:
+                switch (Options.ResponseSerializer)
+                {
+                    case EResponseSerializer.UseXmlDataContractSerializer:
+                        restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromDataContractXml<TResponseType>(response)).ConfigureAwait(false);
+                        break;
+                    case EResponseSerializer.UseXmlSerializer:
+                        restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromXml<TResponseType>(response)).ConfigureAwait(false);
+                        break;
+                    case EResponseSerializer.UseJsonNet:
                     {
                         using (var responseStream = response.GetResponseStream())
                         {
@@ -265,8 +267,8 @@ namespace Xciles.Uncommon.Net
                             }
                         }
                     }
-                    break;
-                case EResponseSerializer.UseByteArray:
+                        break;
+                    case EResponseSerializer.UseByteArray:
                     {
                         using (Stream stream = response.GetResponseStream())
                         {
@@ -274,11 +276,12 @@ namespace Xciles.Uncommon.Net
                             restResponse.RawResponseContent = await ReadFullyAsync(stream, response.ContentLength).ConfigureAwait(false);
                         }
                     }
-                    break;
-                default:
-                    // Wrong ResponseSerializer settings are used: response is not set.
-                    // Possibly set an error ;)
-                    break;
+                        break;
+                    default:
+                        // Wrong ResponseSerializer settings are used: response is not set.
+                        // Possibly set an error ;)
+                        break;
+                }
             }
 
             CookieContainer cookies = null;
