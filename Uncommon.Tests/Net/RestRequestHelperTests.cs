@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Fakes;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using Global.Fakes;
@@ -28,6 +30,12 @@ namespace Xciles.Uncommon.Tests.Net
         public void GetTest()
         {
             GetTestAsync().Wait();
+        }
+
+        [TestMethod]
+        public void GetRawTest()
+        {
+            GetRawTestAsync().Wait();
         }
 
         private async Task GetTestAsync()
@@ -63,12 +71,46 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var single = await RestRequestHelper.ProcessGetRequest<Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), null);
+                var response = await RestRequestHelper.ProcessGetRequest<Person>(String.Format("{0}/{1}", "http://www.example.com", "person"));
 
-                Assert.AreEqual(person.Firstname, single.Result.Firstname);
-                Assert.AreEqual(person.Lastname, single.Result.Lastname);
-                Assert.AreEqual(person.PhoneNumber, single.Result.PhoneNumber);
-                Assert.IsTrue(single.StatusCode == HttpStatusCode.OK);
+                Assert.AreEqual(person.Firstname, response.Result.Firstname);
+                Assert.AreEqual(person.Lastname, response.Result.Lastname);
+                Assert.AreEqual(person.PhoneNumber, response.Result.PhoneNumber);
+                Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
+            }
+        }
+
+        private async Task GetRawTestAsync()
+        {
+            using (ShimsContext.Create())
+            {
+                var aString = "this is just a string!";
+                var stringAsBytes = Encoding.UTF8.GetBytes(aString);
+
+                ShimHttpWebResponse res = new ShimHttpWebResponse
+                {
+                    StatusCodeGet = () => HttpStatusCode.OK,
+                    GetResponseStream = () =>
+                    {
+                        var stream = new MemoryStream(stringAsBytes);
+
+                        return stream;
+                    },
+                    CookiesGet = () => new CookieCollection()
+                };
+
+                ShimAsyncExtensions.GetResponseAsyncWebRequest = request =>
+                {
+                    return Task.FromResult((WebResponse)res.Instance);
+                };
+
+                var response = await RestRequestHelper.ProcessRawGetRequest(String.Format("{0}/{1}", "http://www.example.com", "personAsBytes"));
+
+                var responseString = Encoding.UTF8.GetString(response.Result);
+
+                Assert.IsTrue(stringAsBytes.Count() == response.Result.Count());
+                Assert.AreEqual(aString, responseString);
+                Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
             }
         }
 
