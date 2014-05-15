@@ -43,7 +43,7 @@ namespace Xciles.Uncommon.Net
 
         public static async Task<RestResponse<NoResponseContent>> ProcessPutRequest<TRequestType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
         {
-            var restRequest = CreateRestRequest(ERestMethod.POST, restRequestUri, state, options);
+            var restRequest = CreateRestRequest(ERestMethod.PUT, restRequestUri, state, options);
 
             return await restRequest.ProcessRequest<TRequestType, NoResponseContent>(requestContent).ConfigureAwait(false);
         }
@@ -57,7 +57,7 @@ namespace Xciles.Uncommon.Net
 
         public static async Task<RestResponse<NoResponseContent>> ProcessPatchRequest<TRequestType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
         {
-            var restRequest = CreateRestRequest(ERestMethod.POST, restRequestUri, state, options);
+            var restRequest = CreateRestRequest(ERestMethod.PATCH, restRequestUri, state, options);
 
             return await restRequest.ProcessRequest<TRequestType, NoResponseContent>(requestContent).ConfigureAwait(false);
         }

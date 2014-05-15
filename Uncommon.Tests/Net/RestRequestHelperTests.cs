@@ -49,6 +49,36 @@ namespace Xciles.Uncommon.Tests.Net
             PostTestAsync().Wait();
         }
 
+        [TestMethod]
+        public void PostWithResultTest()
+        {
+            PostWithResultTestAsync().Wait();
+        }
+
+        [TestMethod]
+        public void PutTest()
+        {
+            PutTestAsync().Wait();
+        }
+
+        [TestMethod]
+        public void PutWithResultTest()
+        {
+            PutWithResultTestAsync().Wait();
+        }
+
+        [TestMethod]
+        public void PatchTest()
+        {
+            PatchTestAsync().Wait();
+        }
+
+        [TestMethod]
+        public void PatchWithResultTest()
+        {
+            PatchWithResultTestAsync().Wait();
+        }
+
         private async Task GetTestAsync()
         {
             using (ShimsContext.Create())
@@ -174,11 +204,17 @@ namespace Xciles.Uncommon.Tests.Net
                     SomeString = "This is just a string"
                 };
 
-
                 ShimHttpWebResponse res = new ShimHttpWebResponse
                 {
                     StatusCodeGet = () => HttpStatusCode.OK,
                     CookiesGet = () => new CookieCollection()
+                };
+
+                var writeStream = (Stream)new MemoryStream();
+
+                ShimAsyncExtensions.GetRequestStreamAsyncWebRequest = request =>
+                {
+                    return Task.FromResult(writeStream);
                 };
 
                 ShimAsyncExtensions.GetResponseAsyncWebRequest = request =>
@@ -188,6 +224,224 @@ namespace Xciles.Uncommon.Tests.Net
 
                 var response = await RestRequestHelper.ProcessPostRequest(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
+                Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
+            }
+        }
+
+        private async Task PostWithResultTestAsync()
+        {
+            using (ShimsContext.Create())
+            {
+                var person = new Person
+                {
+                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
+                    Firstname = "First",
+                    Lastname = "Person",
+                    PhoneNumber = "0123456789",
+                    SomeString = "This is just a string"
+                };
+
+                ShimHttpWebResponse res = new ShimHttpWebResponse
+                {
+                    StatusCodeGet = () => HttpStatusCode.OK,
+                    GetResponseStream = () =>
+                    {
+                        var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(person));
+
+                        var stream = new MemoryStream(bytes);
+
+                        return stream;
+                    },
+                    CookiesGet = () => new CookieCollection()
+                };
+
+                var writeStream = (Stream)new MemoryStream();
+
+                ShimAsyncExtensions.GetRequestStreamAsyncWebRequest = request =>
+                {
+                    return Task.FromResult(writeStream);
+                };
+
+                ShimAsyncExtensions.GetResponseAsyncWebRequest = request =>
+                {
+                    return Task.FromResult((WebResponse)res.Instance);
+                };
+
+                var response = await RestRequestHelper.ProcessPostRequest<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+
+                Assert.AreEqual(person.Firstname, response.Result.Firstname);
+                Assert.AreEqual(person.Lastname, response.Result.Lastname);
+                Assert.AreEqual(person.PhoneNumber, response.Result.PhoneNumber);
+                Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
+            }
+        }
+
+        private async Task PutTestAsync()
+        {
+            using (ShimsContext.Create())
+            {
+                var person = new Person
+                {
+                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
+                    Firstname = "First",
+                    Lastname = "Person",
+                    PhoneNumber = "0123456789",
+                    SomeString = "This is just a string"
+                };
+
+                ShimHttpWebResponse res = new ShimHttpWebResponse
+                {
+                    StatusCodeGet = () => HttpStatusCode.OK,
+                    CookiesGet = () => new CookieCollection()
+                };
+
+                var writeStream = (Stream)new MemoryStream();
+
+                ShimAsyncExtensions.GetRequestStreamAsyncWebRequest = request =>
+                {
+                    return Task.FromResult(writeStream);
+                };
+
+                ShimAsyncExtensions.GetResponseAsyncWebRequest = request =>
+                {
+                    return Task.FromResult((WebResponse)res.Instance);
+                };
+
+                var response = await RestRequestHelper.ProcessPutRequest(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+
+                Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
+            }
+        }
+
+        private async Task PutWithResultTestAsync()
+        {
+            using (ShimsContext.Create())
+            {
+                var person = new Person
+                {
+                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
+                    Firstname = "First",
+                    Lastname = "Person",
+                    PhoneNumber = "0123456789",
+                    SomeString = "This is just a string"
+                };
+
+                ShimHttpWebResponse res = new ShimHttpWebResponse
+                {
+                    StatusCodeGet = () => HttpStatusCode.OK,
+                    GetResponseStream = () =>
+                    {
+                        var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(person));
+
+                        var stream = new MemoryStream(bytes);
+
+                        return stream;
+                    },
+                    CookiesGet = () => new CookieCollection()
+                };
+
+                var writeStream = (Stream)new MemoryStream();
+
+                ShimAsyncExtensions.GetRequestStreamAsyncWebRequest = request =>
+                {
+                    return Task.FromResult(writeStream);
+                };
+
+                ShimAsyncExtensions.GetResponseAsyncWebRequest = request =>
+                {
+                    return Task.FromResult((WebResponse)res.Instance);
+                };
+
+                var response = await RestRequestHelper.ProcessPutRequest<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+
+                Assert.AreEqual(person.Firstname, response.Result.Firstname);
+                Assert.AreEqual(person.Lastname, response.Result.Lastname);
+                Assert.AreEqual(person.PhoneNumber, response.Result.PhoneNumber);
+                Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
+            }
+        }
+
+        private async Task PatchTestAsync()
+        {
+            using (ShimsContext.Create())
+            {
+                var person = new Person
+                {
+                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
+                    Firstname = "First",
+                    Lastname = "Person",
+                    PhoneNumber = "0123456789",
+                    SomeString = "This is just a string"
+                };
+
+                ShimHttpWebResponse res = new ShimHttpWebResponse
+                {
+                    StatusCodeGet = () => HttpStatusCode.OK,
+                    CookiesGet = () => new CookieCollection()
+                };
+
+                var writeStream = (Stream)new MemoryStream();
+
+                ShimAsyncExtensions.GetRequestStreamAsyncWebRequest = request =>
+                {
+                    return Task.FromResult(writeStream);
+                };
+
+                ShimAsyncExtensions.GetResponseAsyncWebRequest = request =>
+                {
+                    return Task.FromResult((WebResponse)res.Instance);
+                };
+
+                var response = await RestRequestHelper.ProcessPatchRequest(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+
+                Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
+            }
+        }
+
+        private async Task PatchWithResultTestAsync()
+        {
+            using (ShimsContext.Create())
+            {
+                var person = new Person
+                {
+                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
+                    Firstname = "First",
+                    Lastname = "Person",
+                    PhoneNumber = "0123456789",
+                    SomeString = "This is just a string"
+                };
+
+                ShimHttpWebResponse res = new ShimHttpWebResponse
+                {
+                    StatusCodeGet = () => HttpStatusCode.OK,
+                    GetResponseStream = () =>
+                    {
+                        var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(person));
+
+                        var stream = new MemoryStream(bytes);
+
+                        return stream;
+                    },
+                    CookiesGet = () => new CookieCollection()
+                };
+
+                var writeStream = (Stream)new MemoryStream();
+
+                ShimAsyncExtensions.GetRequestStreamAsyncWebRequest = request =>
+                {
+                    return Task.FromResult(writeStream);
+                };
+
+                ShimAsyncExtensions.GetResponseAsyncWebRequest = request =>
+                {
+                    return Task.FromResult((WebResponse)res.Instance);
+                };
+
+                var response = await RestRequestHelper.ProcessPatchRequest<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+
+                Assert.AreEqual(person.Firstname, response.Result.Firstname);
+                Assert.AreEqual(person.Lastname, response.Result.Lastname);
+                Assert.AreEqual(person.PhoneNumber, response.Result.PhoneNumber);
                 Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
             }
         }
