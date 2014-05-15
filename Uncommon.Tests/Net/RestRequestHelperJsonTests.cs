@@ -79,6 +79,24 @@ namespace Xciles.Uncommon.Tests.Net
             PatchWithResultTestAsync().Wait();
         }
 
+        [TestMethod]
+        public void DeleteTest()
+        {
+            DeleteTestAsync().Wait();
+        }
+
+        [TestMethod]
+        public void DeleteNoContentTest()
+        {
+            DeleteNoContentTestAsync().Wait();
+        }
+
+        [TestMethod]
+        public void DeleteWithResultTest()
+        {
+            DeleteWithResultTestAsync().Wait();
+        }
+
         private async Task GetTestAsync()
         {
             using (ShimsContext.Create())
@@ -224,6 +242,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 var response = await RestRequestHelper.ProcessPostRequest(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
+                Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
             }
         }
@@ -269,6 +288,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 var response = await RestRequestHelper.ProcessPostRequest<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
+                Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.AreEqual(person.Firstname, response.Result.Firstname);
                 Assert.AreEqual(person.Lastname, response.Result.Lastname);
                 Assert.AreEqual(person.PhoneNumber, response.Result.PhoneNumber);
@@ -309,6 +329,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 var response = await RestRequestHelper.ProcessPutRequest(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
+                Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
             }
         }
@@ -354,6 +375,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 var response = await RestRequestHelper.ProcessPutRequest<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
+                Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.AreEqual(person.Firstname, response.Result.Firstname);
                 Assert.AreEqual(person.Lastname, response.Result.Lastname);
                 Assert.AreEqual(person.PhoneNumber, response.Result.PhoneNumber);
@@ -394,6 +416,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 var response = await RestRequestHelper.ProcessPatchRequest(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
+                Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
             }
         }
@@ -439,6 +462,132 @@ namespace Xciles.Uncommon.Tests.Net
 
                 var response = await RestRequestHelper.ProcessPatchRequest<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
+                Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
+                Assert.AreEqual(person.Firstname, response.Result.Firstname);
+                Assert.AreEqual(person.Lastname, response.Result.Lastname);
+                Assert.AreEqual(person.PhoneNumber, response.Result.PhoneNumber);
+                Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
+            }
+        }
+
+        private async Task DeleteTestAsync()
+        {
+            using (ShimsContext.Create())
+            {
+                var person = new Person
+                {
+                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
+                    Firstname = "First",
+                    Lastname = "Person",
+                    PhoneNumber = "0123456789",
+                    SomeString = "This is just a string"
+                };
+
+                ShimHttpWebResponse res = new ShimHttpWebResponse
+                {
+                    StatusCodeGet = () => HttpStatusCode.OK,
+                    CookiesGet = () => new CookieCollection()
+                };
+
+                var writeStream = (Stream)new MemoryStream();
+
+                ShimAsyncExtensions.GetRequestStreamAsyncWebRequest = request =>
+                {
+                    return Task.FromResult(writeStream);
+                };
+
+                ShimAsyncExtensions.GetResponseAsyncWebRequest = request =>
+                {
+                    return Task.FromResult((WebResponse)res.Instance);
+                };
+
+                var response = await RestRequestHelper.ProcessDeleteRequest(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+
+                Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
+                Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
+            }
+        }
+
+        private async Task DeleteNoContentTestAsync()
+        {
+            using (ShimsContext.Create())
+            {
+                var person = new Person
+                {
+                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
+                    Firstname = "First",
+                    Lastname = "Person",
+                    PhoneNumber = "0123456789",
+                    SomeString = "This is just a string"
+                };
+
+                ShimHttpWebResponse res = new ShimHttpWebResponse
+                {
+                    StatusCodeGet = () => HttpStatusCode.OK,
+                    CookiesGet = () => new CookieCollection()
+                };
+
+                var writeStream = (Stream)new MemoryStream();
+
+                ShimAsyncExtensions.GetRequestStreamAsyncWebRequest = request =>
+                {
+                    return Task.FromResult(writeStream);
+                };
+
+                ShimAsyncExtensions.GetResponseAsyncWebRequest = request =>
+                {
+                    return Task.FromResult((WebResponse)res.Instance);
+                };
+
+                var response = await RestRequestHelper.ProcessDeleteRequest(String.Format("{0}/{1}", "http://www.example.com", "person/1"));
+
+                Assert.IsTrue(writeStream.CanWrite); // Didn't write anything to it, shouldn't be closed...
+                Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
+            }
+        }
+
+        private async Task DeleteWithResultTestAsync()
+        {
+            using (ShimsContext.Create())
+            {
+                var person = new Person
+                {
+                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
+                    Firstname = "First",
+                    Lastname = "Person",
+                    PhoneNumber = "0123456789",
+                    SomeString = "This is just a string"
+                };
+
+                ShimHttpWebResponse res = new ShimHttpWebResponse
+                {
+                    StatusCodeGet = () => HttpStatusCode.OK,
+                    GetResponseStream = () =>
+                    {
+                        var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(person));
+
+                        var stream = new MemoryStream(bytes);
+
+                        return stream;
+                    },
+                    CookiesGet = () => new CookieCollection()
+                };
+
+                var writeStream = (Stream)new MemoryStream();
+
+                ShimAsyncExtensions.GetRequestStreamAsyncWebRequest = request =>
+                {
+                    return Task.FromResult(writeStream);
+                };
+
+                ShimAsyncExtensions.GetResponseAsyncWebRequest = request =>
+                {
+                    return Task.FromResult((WebResponse)res.Instance);
+                };
+
+                var response = await RestRequestHelper.ProcessDeleteRequest<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+
+                Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.AreEqual(person.Firstname, response.Result.Firstname);
                 Assert.AreEqual(person.Lastname, response.Result.Lastname);
                 Assert.AreEqual(person.PhoneNumber, response.Result.PhoneNumber);

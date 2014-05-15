@@ -69,6 +69,13 @@ namespace Xciles.Uncommon.Net
             return await restRequest.ProcessRequest<TRequestType, TResponseType>(requestContent).ConfigureAwait(false);
         }
 
+        public static async Task<RestResponse<NoResponseContent>> ProcessDeleteRequest(string restRequestUri, object state = null, RestRequestOptions options = null)
+        {
+            var restRequest = CreateRestRequest(ERestMethod.DELETE, restRequestUri, state, options);
+
+            return await restRequest.ProcessRequest<NoRequestContent, NoResponseContent>(null).ConfigureAwait(false);
+        }
+
         public static async Task<RestResponse<NoResponseContent>> ProcessDeleteRequest<TRequestType>(string restRequestUri, TRequestType requestContent, object state = null, RestRequestOptions options = null)
         {
             var restRequest = CreateRestRequest(ERestMethod.DELETE, restRequestUri, state, options);
