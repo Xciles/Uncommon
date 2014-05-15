@@ -23,7 +23,7 @@ namespace Xciles.Uncommon.Tests.Net
     }
 
     [TestClass]
-    public class RestRequestHelperTests
+    public class RestRequestHelperJsonTests
     {
         [TestMethod]
         public void GetTest()
