@@ -109,7 +109,7 @@ namespace Xciles.Uncommon.Net
                 {
                     StopTimer();
 
-                    restResponse = await HandleResponseContent<TResponseType>(response).ConfigureAwait(false);
+                    restResponse = await HandleResponse<TResponseType>(response).ConfigureAwait(false);
                     restResponse.State = State;
                     restResponse.StatusCode = response.StatusCode;
                 }
@@ -242,7 +242,7 @@ namespace Xciles.Uncommon.Net
 
         #region Response methods
 
-        private async Task<RestResponse<TResponseType>> HandleResponseContent<TResponseType>(HttpWebResponse response)
+        private async Task<RestResponse<TResponseType>> HandleResponse<TResponseType>(HttpWebResponse response)
         {
             var restResponse = new RestResponse<TResponseType>();
 

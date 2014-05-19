@@ -512,15 +512,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpWebResponse res = new ShimHttpWebResponse
                 {
                     StatusCodeGet = () => HttpStatusCode.OK,
