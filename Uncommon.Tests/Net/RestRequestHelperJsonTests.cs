@@ -130,7 +130,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessGetRequest<Person>(String.Format("{0}/{1}", "http://www.example.com", "person"));
+                var response = await RestRequestHelper.ProcessGetRequestAsync<Person>(String.Format("{0}/{1}", "http://www.example.com", "person"));
 
                 Assert.AreEqual(person.Firstname, response.Result.Firstname);
                 Assert.AreEqual(person.Lastname, response.Result.Lastname);
@@ -163,7 +163,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessRawGetRequest(String.Format("{0}/{1}", "http://www.example.com", "personAsBytes"));
+                var response = await RestRequestHelper.ProcessRawGetRequestAsync(String.Format("{0}/{1}", "http://www.example.com", "personAsBytes"));
 
                 var responseString = Encoding.UTF8.GetString(response.Result);
 
@@ -199,7 +199,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessRawGetRequest(String.Format("{0}/{1}", "http://www.example.com", "personAsBytes"));
+                var response = await RestRequestHelper.ProcessRawGetRequestAsync(String.Format("{0}/{1}", "http://www.example.com", "personAsBytes"));
 
                 var responseString = Encoding.UTF8.GetString(response.Result);
 
@@ -240,7 +240,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessPostRequest(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+                var response = await RestRequestHelper.ProcessPostRequestAsync(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
                 Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
@@ -286,7 +286,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessPostRequest<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+                var response = await RestRequestHelper.ProcessPostRequestAsync<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
                 Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.AreEqual(person.Firstname, response.Result.Firstname);
@@ -327,7 +327,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessPutRequest(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+                var response = await RestRequestHelper.ProcessPutRequestAsync(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
                 Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
@@ -373,7 +373,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessPutRequest<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+                var response = await RestRequestHelper.ProcessPutRequestAsync<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
                 Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.AreEqual(person.Firstname, response.Result.Firstname);
@@ -414,7 +414,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessPatchRequest(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+                var response = await RestRequestHelper.ProcessPatchRequestAsync(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
                 Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
@@ -460,7 +460,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessPatchRequest<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+                var response = await RestRequestHelper.ProcessPatchRequestAsync<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
                 Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.AreEqual(person.Firstname, response.Result.Firstname);
@@ -501,7 +501,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessDeleteRequest(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+                var response = await RestRequestHelper.ProcessDeleteRequestAsync(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
                 Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
@@ -530,7 +530,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessDeleteRequest(String.Format("{0}/{1}", "http://www.example.com", "person/1"));
+                var response = await RestRequestHelper.ProcessDeleteRequestAsync(String.Format("{0}/{1}", "http://www.example.com", "person/1"));
 
                 Assert.IsTrue(writeStream.CanWrite); // Didn't write anything to it, shouldn't be closed...
                 Assert.IsTrue(response.StatusCode == HttpStatusCode.OK);
@@ -576,7 +576,7 @@ namespace Xciles.Uncommon.Tests.Net
                     return Task.FromResult((WebResponse)res.Instance);
                 };
 
-                var response = await RestRequestHelper.ProcessDeleteRequest<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
+                var response = await RestRequestHelper.ProcessDeleteRequestAsync<Person, Person>(String.Format("{0}/{1}", "http://www.example.com", "person"), person);
 
                 Assert.IsFalse(writeStream.CanWrite); // Since it should be closed...
                 Assert.AreEqual(person.Firstname, response.Result.Firstname);
