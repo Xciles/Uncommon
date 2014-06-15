@@ -62,7 +62,7 @@ namespace Xciles.Uncommon.Net
 
         #endregion
 
-        public async Task<RestResponse<TResponseType>> ProcessRequest<TRequestType, TResponseType>(TRequestType requestContent)
+        public async Task<RestResponse<TResponseType>> ProcessRequestAsync<TRequestType, TResponseType>(TRequestType requestContent)
         {
             var restResponse = new RestResponse<TResponseType>();
 
@@ -70,11 +70,11 @@ namespace Xciles.Uncommon.Net
 
             _request = (HttpWebRequest)WebRequest.Create(requestUri);
             _request.Method = RestMethod.ToString("G");
-            _request.Accept = CreateAcceptHeader(Options.ResponseSerializer);
+            _request.Accept = CreateHttpAcceptHeader(Options.ResponseSerializer);
 
             if (RestMethod != ERestMethod.GET)
             {
-                _request.ContentType = CreateContentTypeHeader(Options.RequestSerializer);
+                _request.ContentType = CreateHttpContentTypeHeader(Options.RequestSerializer);
             }
 
             if (Options.Headers != null)
@@ -100,7 +100,7 @@ namespace Xciles.Uncommon.Net
                 {
                     using (var requestStream = await _request.GetRequestStreamAsync().ConfigureAwait(false))
                     {
-                        byte[] requestBody = await GetRequestBody(requestContent).ConfigureAwait(false);
+                        byte[] requestBody = await GetRequestBodyAsync(requestContent).ConfigureAwait(false);
                         await requestStream.WriteAsync(requestBody, 0, requestBody.Length).ConfigureAwait(false);
                     }
                 }
@@ -109,7 +109,7 @@ namespace Xciles.Uncommon.Net
                 {
                     StopTimer();
 
-                    restResponse = await HandleResponse<TResponseType>(response).ConfigureAwait(false);
+                    restResponse = await HandleResponseAsync<TResponseType>(response).ConfigureAwait(false);
                     restResponse.State = State;
                     restResponse.StatusCode = response.StatusCode;
                 }
@@ -138,14 +138,14 @@ namespace Xciles.Uncommon.Net
             return restResponse;
         }
 
-        public async Task<RestResponse<TResponseType>> ProcessRequest<TResponseType>()
+        public async Task<RestResponse<TResponseType>> ProcessRequestAsync<TResponseType>()
         {
-            return await ProcessRequest<NoRequestContent, TResponseType>(null).ConfigureAwait(false);
+            return await ProcessRequestAsync<NoRequestContent, TResponseType>(null).ConfigureAwait(false);
         }
 
         #region Request methods
 
-        private async Task<byte[]> GetRequestBody<TRequestType>(TRequestType requestContent)
+        private async Task<byte[]> GetRequestBodyAsync<TRequestType>(TRequestType requestContent)
         {
             byte[] requestBody = null;
 
@@ -184,7 +184,7 @@ namespace Xciles.Uncommon.Net
             return requestBody;
         }
 
-        private static string CreateContentTypeHeader(ERequestSerializer requestSerializer)
+        private static string CreateHttpContentTypeHeader(ERequestSerializer requestSerializer)
         {
             switch (requestSerializer)
             {
@@ -200,7 +200,7 @@ namespace Xciles.Uncommon.Net
             }
         }
 
-        private static string CreateAcceptHeader(EResponseSerializer responseSerializer)
+        private static string CreateHttpAcceptHeader(EResponseSerializer responseSerializer)
         {
             switch (responseSerializer)
             {
@@ -242,7 +242,7 @@ namespace Xciles.Uncommon.Net
 
         #region Response methods
 
-        private async Task<RestResponse<TResponseType>> HandleResponse<TResponseType>(HttpWebResponse response)
+        private async Task<RestResponse<TResponseType>> HandleResponseAsync<TResponseType>(HttpWebResponse response)
         {
             var restResponse = new RestResponse<TResponseType>();
 
