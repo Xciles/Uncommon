@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Xciles.Uncommon")]
-[assembly: AssemblyDescription("A common library for PCL containing usefull 'helpers'. This library is still under development!")]
+[assembly: AssemblyDescription("A common library for PCL containing usefull 'helpers'.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Xciles.Uncommon")]
@@ -26,4 +26,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.1.0")]
+[assembly: AssemblyVersion("1.1.0.0")]
