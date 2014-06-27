@@ -134,6 +134,15 @@ namespace Xciles.Uncommon.Net
 
                 HandleWebException(webException);
             }
+            catch (Exception ex)
+            {
+                throw new RestRequestException
+                {
+                    RestRequestExceptionStatus = ERestRequestExceptionStatus.Undefined,
+                    Information = ex.Message,
+                    StatusCode = HttpStatusCode.NotFound
+                };
+            }
 
             return restResponse;
         }
