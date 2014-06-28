@@ -139,7 +139,7 @@ namespace Xciles.Uncommon.Net
                 throw new RestRequestException
                 {
                     RestRequestExceptionStatus = ERestRequestExceptionStatus.Undefined,
-                    Information = ex.Message,
+                    Information = "TheStrangeMonoNullException",
                     StatusCode = HttpStatusCode.NotFound
                 };
             }
