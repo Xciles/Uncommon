@@ -96,7 +96,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Uncommon\Uncommon.csproj">
       <Project>{d39753b5-a5ce-4868-9f67-7b3714420768}</Project>
-      <Name>UnCommon</Name>
+      <Name>Uncommon</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
