@@ -14,6 +14,7 @@ namespace Xciles.Uncommon.Net
     internal class NoRequestContent { }
     public class NoResponseContent { }
 
+    [Obsolete("This will be removed in a future version.")]
     public class RestRequest
     {
         private Timer _timer;
