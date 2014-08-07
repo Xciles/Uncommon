@@ -27,11 +27,13 @@ namespace Uncommon.Tests.Client
 
             client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
+            client.Timeout = new TimeSpan(0,0,2);
+            var t = await client.GetAsync("http://localhost:31146/api/uncommon/testdatas");
+            t.EnsureSuccessStatusCode();
 
             var dataAsString = await client.GetStringAsync("http://localhost:31146/api/uncommon/testdatas");
             var data = JsonConvert.DeserializeObject<IList<UncommonData>>(dataAsString);
 
-            var t = await client.GetAsync("http://localhost:31146/api/uncommon/testdatas");
 
             Console.ReadKey();
         }

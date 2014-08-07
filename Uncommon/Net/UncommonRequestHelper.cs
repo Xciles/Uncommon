@@ -82,18 +82,55 @@ namespace Xciles.Uncommon.Net
             return await ProcessRequest<TRequestType, TResponseType>(ERestMethod.DELETE, requestUri, requestContent, options);
         }
 
+
         private static async Task<RestResponse<TResponseType>> ProcessRequest<TRequestType, TResponseType>(ERestMethod method, string requestUri, TRequestType requestContent, UncommonRequestOptions options)
         {
-            options = SetRestRequestOptions(options);
-
-            using (var client = new UncommonHttpClient())
+            try
             {
-                var httpContent = await GenerateRequestContent(requestContent, options);
-                var request = CreateRequestMessage(method, requestUri, httpContent, options);
+                options = SetRestRequestOptions(options);
 
-                var response = await client.SendAsync(request, CancellationToken.None);
+                using (var client = new UncommonHttpClient())
+                {
+                    var httpContent = await GenerateRequestContent(requestContent, options);
+                    var request = CreateRequestMessage(method, requestUri, httpContent, options);
 
-                return await ProcessReponseContent<TResponseType>(response, options);
+                    var response = await client.SendAsync(request, CancellationToken.None);
+                    response.EnsureSuccessStatusCode();
+
+                    return await ProcessReponseContent<TResponseType>(response, options);
+                }
+            }
+            catch (JsonSerializationException ex)
+            {
+                throw new RestRequestException
+                {
+                    Information = "JsonSerializationException",
+                    StatusCode = HttpStatusCode.OK,
+                    WebExceptionStatus = WebExceptionStatus.UnknownError,
+                    Exception = ex,
+                    RestRequestExceptionStatus = ERestRequestExceptionStatus.SerializationError
+                };
+            }
+            catch (HttpRequestException ex)
+            {
+                throw; // change to properly handle exceptions
+            }
+            catch (TaskCanceledException ex)
+            {
+                // mostlikely an timeout
+                throw new RestRequestException
+                {
+                    RestRequestExceptionStatus = ERestRequestExceptionStatus.Timeout
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new RestRequestException
+                {
+                    RestRequestExceptionStatus = ERestRequestExceptionStatus.Undefined,
+                    Information = "TheStrangeMonoNullException",
+                    StatusCode = HttpStatusCode.NotFound
+                };
             }
         }
 
@@ -217,44 +254,6 @@ namespace Xciles.Uncommon.Net
             }
 
             return restResponse;
-
-            //if (typeof(TResponseType) != typeof(NoResponseContent))
-            //{
-            //    switch (Options.ResponseSerializer)
-            //    {
-            //        case EResponseSerializer.UseXmlDataContractSerializer:
-            //            restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromDataContractXml<TResponseType>(response)).ConfigureAwait(false);
-            //            break;
-            //        case EResponseSerializer.UseXmlSerializer:
-            //            restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromXml<TResponseType>(response)).ConfigureAwait(false);
-            //            break;
-            //        case EResponseSerializer.UseJsonNet:
-            //            {
-            //                using (var responseStream = response.GetResponseStream())
-            //                {
-            //                    using (var reader = new StreamReader(responseStream))
-            //                    {
-            //                        var objectAsString = await reader.ReadToEndAsync().ConfigureAwait(false);
-            //                        restResponse.Result = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<TResponseType>(objectAsString, _jsonSerializerSettings)).ConfigureAwait(false);
-            //                    }
-            //                }
-            //            }
-            //            break;
-            //        case EResponseSerializer.UseByteArray:
-            //            {
-            //                using (Stream stream = response.GetResponseStream())
-            //                {
-            //                    // http://www.yoda.arachsys.com/csharp/readbinary.html
-            //                    restResponse.RawResponseContent = await ReadFullyAsync(stream, response.ContentLength).ConfigureAwait(false);
-            //                }
-            //            }
-            //            break;
-            //        default:
-            //            // Wrong ResponseSerializer settings are used: response is not set.
-            //            // Possibly set an error ;)
-            //            break;
-            //    }
-            //}
 
             //CookieContainer cookies = null;
             //if (response.Cookies != null && response.Cookies.Count > 0)
