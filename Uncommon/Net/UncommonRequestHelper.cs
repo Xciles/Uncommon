@@ -89,8 +89,15 @@ namespace Xciles.Uncommon.Net
             {
                 options = SetRestRequestOptions(options);
 
+                //var client = new HttpClient(new ClientCompressionHandler(new HttpClientHandler(), new GZipCompressor(), new DeflateCompressor()));
+
+                //client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+                //client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
+
                 using (var client = new UncommonHttpClient())
                 {
+                    client.Timeout = new TimeSpan(0, 0, 0, 0, options.Timeout);
+
                     var httpContent = await GenerateRequestContent(requestContent, options);
                     var request = CreateRequestMessage(method, requestUri, httpContent, options);
 
@@ -278,30 +285,6 @@ namespace Xciles.Uncommon.Net
             //    StatusCode = response.StatusCode
             //};
         }
-
-        private static void SetClientOptions(UncommonHttpClient client, UncommonRequestOptions options)
-        {
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(CreateHttpAcceptHeader(options.ResponseSerializer)));
-            if (options.Headers != null)
-            {
-                foreach (var header in options.Headers)
-                {
-                    client.DefaultRequestHeaders.Add(header.Key, header.Value);
-                }
-            }
-
-            if (options.Authorized && options.SecurityContext != null)
-            {
-                client.DefaultRequestHeaders.Add("Authorization", options.SecurityContext.GenerateAuthorizationHeader());
-            }
-
-            // Add cookie things...
-            //if (Options.CookieContainer != null)
-            //{
-            //    _request.CookieContainer = Options.CookieContainer;
-            //}
-        }
-
 
         private static string CreateHttpAcceptHeader(EResponseSerializer responseSerializer)
         {

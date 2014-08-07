@@ -14,6 +14,23 @@ namespace Xciles.Uncommon.Net
     {
         protected JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
 
+        public UncommonHttpClient()
+        {
+            
+        }
+
+        public UncommonHttpClient(HttpMessageHandler handler)
+            : base(handler)
+        {
+            
+        }
+
+        public UncommonHttpClient(HttpMessageHandler handler, bool disposeHandler)
+            : base(handler, disposeHandler)
+        {
+            
+        }
+
         public async Task<T> GetJsonAsync<T>(string requestUrl, HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead)
         {
             return await GetJsonAsync<T>(new Uri(requestUrl), httpCompletionOption, CancellationToken.None);
