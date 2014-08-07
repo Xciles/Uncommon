@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.WebApi.MessageHandlers.Compression;
 using Microsoft.AspNet.WebApi.MessageHandlers.Compression.Compressors;
@@ -22,7 +23,9 @@ namespace Uncommon.Tests.Web
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            GlobalConfiguration.Configuration.MessageHandlers.Insert(0, new ServerCompressionHandler(new GZipCompressor(), new DeflateCompressor()));
+            //var serverCompression = new ServerCompressionHandler(2048, new GZipCompressor(), new DeflateCompressor());
+            var serverCompression = new ServerCompressionHandler(new GZipCompressor(), new DeflateCompressor());
+            GlobalConfiguration.Configuration.MessageHandlers.Insert(0, serverCompression);
         }
     }
 }
