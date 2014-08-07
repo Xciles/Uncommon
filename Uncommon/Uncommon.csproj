@@ -46,6 +46,7 @@
     <Compile Include="Net\ServiceExceptionResult.cs" />
     <Compile Include="Net\UncommonHttpClient.cs" />
     <Compile Include="Net\UncommonRequestException.cs" />
+    <Compile Include="Net\UncommonRequestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ISecurityContext.cs" />
     <Compile Include="Utils\Retry.cs" />
