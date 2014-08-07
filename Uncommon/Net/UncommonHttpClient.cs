@@ -44,5 +44,67 @@ namespace Xciles.Uncommon.Net
             return await PutAsync(requestUri, httpContent, cancellationToken).ConfigureAwait(false);
         }
 
+        public async Task<HttpResponseMessage> PatchContentAsJsonAsync<T>(Uri requestUri, T requestContent, CancellationToken cancellationToken)
+        {
+            var requestBody = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(requestContent, JsonSerializerSettings), cancellationToken).ConfigureAwait(false);
+
+            HttpContent httpContent = new StringContent(requestBody);
+            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            return await PatchAsync(requestUri, httpContent, cancellationToken).ConfigureAwait(false);
+        }
+
+
+        #region Patch support
+
+        public async Task<HttpResponseMessage> PatchAsync(string requestUri, HttpContent content)
+        {
+            var method = new HttpMethod("PATCH");
+
+            var request = new HttpRequestMessage(method, requestUri)
+            {
+                Content = content
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<HttpResponseMessage> PatchAsync(Uri requestUri, HttpContent content)
+        {
+            var method = new HttpMethod("PATCH");
+
+            var request = new HttpRequestMessage(method, requestUri)
+            {
+                Content = content
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<HttpResponseMessage> PatchAsync(string requestUri, HttpContent content, CancellationToken cancellationToken)
+        {
+            var method = new HttpMethod("PATCH");
+
+            var request = new HttpRequestMessage(method, requestUri)
+            {
+                Content = content
+            };
+
+            return await SendAsync(request, cancellationToken);
+        }
+
+        public async Task<HttpResponseMessage> PatchAsync(Uri requestUri, HttpContent content, CancellationToken cancellationToken)
+        {
+            var method = new HttpMethod("PATCH");
+
+            var request = new HttpRequestMessage(method, requestUri)
+            {
+                Content = content
+            };
+
+            return await SendAsync(request, cancellationToken);
+        }
+
+        #endregion
     }
 }
