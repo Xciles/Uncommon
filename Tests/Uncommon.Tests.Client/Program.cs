@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.WebApi.MessageHandlers.Compression;
+using Microsoft.AspNet.WebApi.MessageHandlers.Compression.Compressors;
+using Newtonsoft.Json;
 
 namespace Uncommon.Tests.Client
 {
@@ -10,6 +15,20 @@ namespace Uncommon.Tests.Client
     {
         static void Main(string[] args)
         {
+            MainAsync().Wait();
+        }
+
+        private static async Task MainAsync()
+        {
+            var client = new HttpClient(new ClientCompressionHandler(new HttpClientHandler(), new GZipCompressor(), new DeflateCompressor()));
+
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
+
+            var dataAsString = await client.GetStringAsync("http://localhost:31146/api/uncommon/testdatas");
+            var data = JsonConvert.DeserializeObject<IList<UncommonData>>(dataAsString);
+
+            Console.ReadKey();
         }
     }
 }
