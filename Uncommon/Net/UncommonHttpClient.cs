@@ -14,6 +14,11 @@ namespace Xciles.Uncommon.Net
     {
         protected JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
 
+        public async Task<T> GetJsonAsync<T>(Uri requestUri, HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead)
+        {
+            return await GetJsonAsync<T>(requestUri, httpCompletionOption, CancellationToken.None);
+        }
+
         // HttpRequestException 
         public async Task<T> GetJsonAsync<T>(Uri requestUri, HttpCompletionOption httpCompletionOption, CancellationToken cancellationToken)
         {
@@ -22,6 +27,21 @@ namespace Xciles.Uncommon.Net
 
             var resultAsString = await httpResponseMessage.Content.ReadAsStringAsync();
             return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(resultAsString, JsonSerializerSettings), cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<HttpResponseMessage> PostContentAsJsonAsync<T>(string requestUrl, T requestContent)
+        {
+            return await PostContentAsJsonAsync(new Uri(requestUrl), requestContent, CancellationToken.None);
+        }
+
+        public async Task<HttpResponseMessage> PostContentAsJsonAsync<T>(string requestUrl, T requestContent, CancellationToken cancellationToken)
+        {
+            return await PostContentAsJsonAsync(new Uri(requestUrl), requestContent, cancellationToken);
+        }
+
+        public async Task<HttpResponseMessage> PostContentAsJsonAsync<T>(Uri requestUri, T requestContent)
+        {
+            return await PostContentAsJsonAsync(requestUri, requestContent, CancellationToken.None);
         }
 
         public async Task<HttpResponseMessage> PostContentAsJsonAsync<T>(Uri requestUri, T requestContent, CancellationToken cancellationToken)
@@ -34,6 +54,21 @@ namespace Xciles.Uncommon.Net
             return await PostAsync(requestUri, httpContent, cancellationToken).ConfigureAwait(false);
         }
 
+        public async Task<HttpResponseMessage> PutContentAsJsonAsync<T>(string requestUrl, T requestContent)
+        {
+            return await PutContentAsJsonAsync(new Uri(requestUrl), requestContent, CancellationToken.None);
+        }
+
+        public async Task<HttpResponseMessage> PutContentAsJsonAsync<T>(string requestUrl, T requestContent, CancellationToken cancellationToken)
+        {
+            return await PutContentAsJsonAsync(new Uri(requestUrl), requestContent, cancellationToken);
+        }
+
+        public async Task<HttpResponseMessage> PutContentAsJsonAsync<T>(Uri requestUri, T requestContent)
+        {
+            return await PutContentAsJsonAsync(requestUri, requestContent, CancellationToken.None);
+        }
+
         public async Task<HttpResponseMessage> PutContentAsJsonAsync<T>(Uri requestUri, T requestContent, CancellationToken cancellationToken)
         {
             var requestBody = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(requestContent, JsonSerializerSettings), cancellationToken).ConfigureAwait(false);
@@ -42,6 +77,21 @@ namespace Xciles.Uncommon.Net
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             return await PutAsync(requestUri, httpContent, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<HttpResponseMessage> PatchContentAsJsonAsync<T>(string requestUrl, T requestContent)
+        {
+            return await PatchContentAsJsonAsync(new Uri(requestUrl), requestContent, CancellationToken.None);
+        }
+
+        public async Task<HttpResponseMessage> PatchContentAsJsonAsync<T>(string requestUrl, T requestContent, CancellationToken cancellationToken)
+        {
+            return await PatchContentAsJsonAsync(new Uri(requestUrl), requestContent, cancellationToken);
+        }
+
+        public async Task<HttpResponseMessage> PatchContentAsJsonAsync<T>(Uri requestUri, T requestContent)
+        {
+            return await PatchContentAsJsonAsync(requestUri, requestContent, CancellationToken.None);
         }
 
         public async Task<HttpResponseMessage> PatchContentAsJsonAsync<T>(Uri requestUri, T requestContent, CancellationToken cancellationToken)
@@ -53,7 +103,6 @@ namespace Xciles.Uncommon.Net
 
             return await PatchAsync(requestUri, httpContent, cancellationToken).ConfigureAwait(false);
         }
-
 
         #region Patch support
 
