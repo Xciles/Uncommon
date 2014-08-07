@@ -36,6 +36,7 @@
     <Compile Include="Net\ERequestSerializer.cs" />
     <Compile Include="Net\EResponseSerializer.cs" />
     <Compile Include="Net\ERestMethod.cs" />
+    <Compile Include="Net\EUncommonRequestExceptionStatus.cs" />
     <Compile Include="Net\ERestRequestExceptionStatus.cs" />
     <Compile Include="Net\RestRequest.cs" />
     <Compile Include="Net\RestRequestException.cs" />
@@ -43,6 +44,8 @@
     <Compile Include="Net\RestRequestOptions.cs" />
     <Compile Include="Net\RestResponse.cs" />
     <Compile Include="Net\ServiceExceptionResult.cs" />
+    <Compile Include="Net\UncommonHttpClient.cs" />
+    <Compile Include="Net\UncommonRequestException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ISecurityContext.cs" />
     <Compile Include="Utils\Retry.cs" />

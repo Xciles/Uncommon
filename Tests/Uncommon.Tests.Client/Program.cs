@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -20,6 +21,8 @@ namespace Uncommon.Tests.Client
 
         private static async Task MainAsync()
         {
+            //var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate });
+
             var client = new HttpClient(new ClientCompressionHandler(new HttpClientHandler(), new GZipCompressor(), new DeflateCompressor()));
 
             client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
@@ -27,6 +30,8 @@ namespace Uncommon.Tests.Client
 
             var dataAsString = await client.GetStringAsync("http://localhost:31146/api/uncommon/testdatas");
             var data = JsonConvert.DeserializeObject<IList<UncommonData>>(dataAsString);
+
+            var t = await client.GetAsync("http://localhost:31146/api/uncommon/testdatas");
 
             Console.ReadKey();
         }
