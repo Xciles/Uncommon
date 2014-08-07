@@ -38,6 +38,8 @@
     <Compile Include="Net\ERestMethod.cs" />
     <Compile Include="Net\EUncommonRequestExceptionStatus.cs" />
     <Compile Include="Net\ERestRequestExceptionStatus.cs" />
+    <Compile Include="Net\UncommonRequestOptions.cs" />
+    <Compile Include="Net\UncommonRestRequest.cs" />
     <Compile Include="Net\RestRequest.cs" />
     <Compile Include="Net\RestRequestException.cs" />
     <Compile Include="Net\RestRequestHelper.cs" />

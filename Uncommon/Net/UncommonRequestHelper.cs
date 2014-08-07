@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Xciles.Uncommon.Security;
@@ -11,19 +13,20 @@ namespace Xciles.Uncommon.Net
     {
         public static ISecurityContext SecurityContext { get; set; }
 
-        public static async Task<RestResponse<TResponseType>> ProcessGetRequestAsync<TResponseType>(string restRequestUri, object state = null, RestRequestOptions options = null)
+        public static async Task<RestResponse<TResponseType>> ProcessGetRequestAsync<TResponseType>(string restRequestUri, object state = null, UncommonRequestOptions options = null)
         {
             options = SetRestRequestOptions(options);
 
             using (var client = new UncommonHttpClient())
             {
                 SetClientOptions(client, options);
+                TResponseType result;
                 // check what deserializer to use
                 switch (options.ResponseSerializer)
                 {
                     case EResponseSerializer.UseJsonNet:
                         {
-
+                            result = await client.GetJsonAsync<TResponseType>(restRequestUri);
                         }
                         break;
                     default:
@@ -31,59 +34,80 @@ namespace Xciles.Uncommon.Net
                             throw new NotSupportedException();
                         }
                 }
+
+                var restResponse = new RestResponse<TResponseType>
+                {
+                    Result = result,
+                    StatusCode = HttpStatusCode.OK
+                };
+
+                return restResponse;
             }
-
-            var restRequest = CreateRestRequest(ERestMethod.GET, restRequestUri, state, options);
-
-            return await restRequest.ProcessRequestAsync<TResponseType>().ConfigureAwait(false);
         }
 
-        private static void SetClientOptions(UncommonHttpClient client, RestRequestOptions options)
+        public static async Task<RestResponse<byte[]>> ProcessRawGetRequestAsync(string restRequestUri, object state = null, UncommonRequestOptions options = null)
         {
-            _request.Accept = CreateHttpAcceptHeader(Options.ResponseSerializer);
+            options = SetRestRequestOptions(options);
 
-            if (RestMethod != ERestMethod.GET)
+            using (var client = new UncommonHttpClient())
             {
-                _request.ContentType = CreateHttpContentTypeHeader(Options.RequestSerializer);
+                SetClientOptions(client, options);
+
+                var r = await client.GetAsync(restRequestUri);
+                r.EnsureSuccessStatusCode();
+                byte[] result = await r.Content.ReadAsByteArrayAsync();
+
+                var restResponse = new RestResponse<byte[]>
+                {
+                    Result = result,
+                    StatusCode = HttpStatusCode.OK
+                };
+
+                return restResponse;
+            }
+        }
+
+        private static void SetClientOptions(UncommonHttpClient client, UncommonRequestOptions options)
+        {
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(CreateHttpAcceptHeader(options.ResponseSerializer)));
+            if (options.Headers != null)
+            {
+                foreach (var header in options.Headers)
+                {
+                    client.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
             }
 
-            if (Options.Headers != null)
+            if (options.Authorized && options.SecurityContext != null)
             {
-                _request.Headers = Options.Headers;
+                client.DefaultRequestHeaders.Add("Authorization", options.SecurityContext.GenerateAuthorizationHeader());
             }
 
-            if (Options.Authorized && Options.SecurityContext != null)
-            {
-                _request.Headers[HttpRequestHeader.Authorization] = Options.SecurityContext.GenerateAuthorizationHeader();
-            }
-
-            if (Options.CookieContainer != null)
-            {
-                _request.CookieContainer = Options.CookieContainer;
-            }
-
-            
-
-        //private static string CreateHttpAcceptHeader(EResponseSerializer responseSerializer)
-        //{
-        //    switch (responseSerializer)
-        //    {
-        //        case EResponseSerializer.UseXmlDataContractSerializer:
-        //        case EResponseSerializer.UseXmlSerializer:
-        //            return "application/xml";
-        //        case EResponseSerializer.UseJsonNet:
-        //            return "application/json;charset=UTF-8";
-        //        default:
-        //            return String.Empty;
-        //    }
-        //}
-
+            // Add cookie things...
+            //if (Options.CookieContainer != null)
+            //{
+            //    _request.CookieContainer = Options.CookieContainer;
+            //}
         }
 
 
-        private static RestRequestOptions SetRestRequestOptions(RestRequestOptions options)
+        private static string CreateHttpAcceptHeader(EResponseSerializer responseSerializer)
         {
-            options = options ?? new RestRequestOptions();
+            switch (responseSerializer)
+            {
+                case EResponseSerializer.UseXmlDataContractSerializer:
+                case EResponseSerializer.UseXmlSerializer:
+                    return "application/xml";
+                case EResponseSerializer.UseJsonNet:
+                    return "application/json;charset=UTF-8";
+                default:
+                    return String.Empty;
+            }
+        }
+
+        private static UncommonRequestOptions SetRestRequestOptions(UncommonRequestOptions options)
+        {
+            options = options ?? new UncommonRequestOptions();
 
             if (SecurityContext != null && options.SecurityContext == null)
             {
