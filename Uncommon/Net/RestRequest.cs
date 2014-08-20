@@ -11,10 +11,7 @@ using Newtonsoft.Json;
 
 namespace Xciles.Uncommon.Net
 {
-    internal class NoRequestContent { }
-    public class NoResponseContent { }
-
-    [Obsolete("This will be removed in a future version.")]
+    [Obsolete("This will be removed in a future version because this lib will start to use the HttpClient instead of just webrequests.")]
     public class RestRequest
     {
         private Timer _timer;

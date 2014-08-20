@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Xciles.Uncommon.Security;
 
 namespace Xciles.Uncommon.Net
 {
+    [Obsolete("This will be removed in a future version because this lib will start to use the HttpClient instead of just webrequests. Use UncommonRestRequestHelper")]
     public class RestRequestHelper
     {
         public static ISecurityContext SecurityContext { get; set; }

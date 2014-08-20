@@ -36,11 +36,15 @@
     <Compile Include="Handler\UncommonHttpClientHandler.cs" />
     <Compile Include="Handler\CompressedHttpContent.cs" />
     <Compile Include="Handler\GZipHttpContent.cs" />
+    <Compile Include="Net\EUncommonRequestSerializer.cs" />
     <Compile Include="Net\ERequestSerializer.cs" />
+    <Compile Include="Net\EUncommonResponseSerializer.cs" />
     <Compile Include="Net\EResponseSerializer.cs" />
+    <Compile Include="Net\EUncommonRequestMethod.cs" />
     <Compile Include="Net\ERestMethod.cs" />
     <Compile Include="Net\EUncommonRequestExceptionStatus.cs" />
     <Compile Include="Net\ERestRequestExceptionStatus.cs" />
+    <Compile Include="Net\UncommonResponse.cs" />
     <Compile Include="Net\UncommonRequestOptions.cs" />
     <Compile Include="Net\RestRequest.cs" />
     <Compile Include="Net\RestRequestException.cs" />
