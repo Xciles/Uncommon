@@ -202,7 +202,7 @@ namespace Xciles.Uncommon.Net
                             var requestBody = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(requestContent, JsonSerializerSettings)).ConfigureAwait(false);
 
                             httpContent = new StringContent(requestBody);
-                            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json;charset=UTF-8");
+                            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                         }
                         break;
                     case EUncommonRequestSerializer.UseStringUrlPost:
@@ -296,7 +296,7 @@ namespace Xciles.Uncommon.Net
                 case EUncommonResponseSerializer.UseXmlSerializer:
                     return "application/xml";
                 case EUncommonResponseSerializer.UseJsonNet:
-                    return "application/json;charset=UTF-8";
+                    return "application/json";
                 default:
                     return String.Empty;
             }
