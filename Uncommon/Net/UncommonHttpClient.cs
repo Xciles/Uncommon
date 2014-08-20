@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Xciles.Uncommon.Handler;
 
 namespace Xciles.Uncommon.Net
 {
@@ -15,20 +16,20 @@ namespace Xciles.Uncommon.Net
         protected JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
 
         public UncommonHttpClient()
+            : base(new UncommonHttpClientHandler())
         {
-            
         }
 
         public UncommonHttpClient(HttpMessageHandler handler)
             : base(handler)
         {
-            
+
         }
 
         public UncommonHttpClient(HttpMessageHandler handler, bool disposeHandler)
             : base(handler, disposeHandler)
         {
-            
+
         }
 
         public async Task<T> GetJsonAsync<T>(string requestUrl, HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead)

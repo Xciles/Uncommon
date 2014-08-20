@@ -26,12 +26,12 @@ namespace Uncommon.Tests.Web.Api
         [Route("testdatas")]
         public async Task<IList<UncommonData>> GetDatas()
         {
-            await Task.Delay(new TimeSpan(0, 0, 10));
-            throw new HttpResponseException(new HttpResponseMessage()
-            {
-                Content = new StringContent("teststests"),
-                StatusCode = HttpStatusCode.Unauthorized
-            });
+            //await Task.Delay(new TimeSpan(0, 0, 10));
+            //throw new HttpResponseException(new HttpResponseMessage()
+            //{
+            //    Content = new StringContent("teststests"),
+            //    StatusCode = HttpStatusCode.Unauthorized
+            //});
 
 
             return await Task.FromResult(new List<UncommonData>()

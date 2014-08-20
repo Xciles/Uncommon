@@ -33,13 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Handler\UncommonHttpClientHandler.cs" />
+    <Compile Include="Handler\CompressedHttpContent.cs" />
+    <Compile Include="Handler\GZipHttpContent.cs" />
     <Compile Include="Net\ERequestSerializer.cs" />
     <Compile Include="Net\EResponseSerializer.cs" />
     <Compile Include="Net\ERestMethod.cs" />
     <Compile Include="Net\EUncommonRequestExceptionStatus.cs" />
     <Compile Include="Net\ERestRequestExceptionStatus.cs" />
     <Compile Include="Net\UncommonRequestOptions.cs" />
-    <Compile Include="Net\UncommonRestRequest.cs" />
     <Compile Include="Net\RestRequest.cs" />
     <Compile Include="Net\RestRequestException.cs" />
     <Compile Include="Net\RestRequestHelper.cs" />
@@ -80,6 +82,9 @@
     </Reference>
     <Reference Include="System.Threading.Tasks">
       <HintPath>..\packages\Microsoft.Bcl.1.1.9\lib\portable-net40+sl5+win8+wp8+wpa81\System.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.10.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
