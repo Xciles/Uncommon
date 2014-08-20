@@ -98,7 +98,11 @@ namespace Xciles.Uncommon.Net
                 {
                     client.Timeout = new TimeSpan(0, 0, 0, 0, options.Timeout);
 
-                    var httpContent = await GenerateRequestContent(requestContent, options);
+                    HttpContent httpContent = null;
+                    if (typeof(TRequestType) != typeof(NoRequestContent))
+                    {
+                        httpContent = await GenerateRequestContent(requestContent, options);
+                    }
                     var request = CreateRequestMessage(method, requestUri, httpContent, options);
 
                     var response = await client.SendAsync(request, CancellationToken.None);
@@ -178,43 +182,40 @@ namespace Xciles.Uncommon.Net
         {
             HttpContent httpContent = null;
 
-            if (typeof(TRequestType) != typeof(NoResponseContent))
+            switch (options.RequestSerializer)
             {
-                switch (options.RequestSerializer)
-                {
-                    case EUncommonRequestSerializer.UseXmlDataContractSerializer:
-                        {
-                            throw new NotSupportedException();
-                        }
-                        break;
-                    case EUncommonRequestSerializer.UseXmlSerializer:
-                        {
-                            throw new NotSupportedException();
-                        }
-                        break;
-                    case EUncommonRequestSerializer.UseByteArray:
-                        {
-                            httpContent = new ByteArrayContent(requestContent as byte[]);
-                        }
-                        break;
-                    case EUncommonRequestSerializer.UseJsonNet:
-                        {
-                            var requestBody = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(requestContent, JsonSerializerSettings)).ConfigureAwait(false);
-
-                            httpContent = new StringContent(requestBody);
-                            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                        }
-                        break;
-                    case EUncommonRequestSerializer.UseStringUrlPost:
-                        {
-                            throw new NotSupportedException();
-                        }
-                        break;
-                    default:
-                        // Return value null indicates that wrong RequestSerializer settings are used.
+                case EUncommonRequestSerializer.UseXmlDataContractSerializer:
+                    {
                         throw new NotSupportedException();
-                        break;
-                }
+                    }
+                    break;
+                case EUncommonRequestSerializer.UseXmlSerializer:
+                    {
+                        throw new NotSupportedException();
+                    }
+                    break;
+                case EUncommonRequestSerializer.UseByteArray:
+                    {
+                        httpContent = new ByteArrayContent(requestContent as byte[]);
+                    }
+                    break;
+                case EUncommonRequestSerializer.UseJsonNet:
+                    {
+                        var requestBody = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(requestContent, JsonSerializerSettings)).ConfigureAwait(false);
+
+                        httpContent = new StringContent(requestBody);
+                        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    }
+                    break;
+                case EUncommonRequestSerializer.UseStringUrlPost:
+                    {
+                        throw new NotSupportedException();
+                    }
+                    break;
+                default:
+                    // Return value null indicates that wrong RequestSerializer settings are used.
+                    throw new NotSupportedException();
+                    break;
             }
 
             return httpContent;
