@@ -13,7 +13,6 @@ The VS solution contains 2 local WebBased test projects which will (and can) be 
 
 Documentation and Examples
 ==========================
-(Code examples are from http://valueinjecter.codeplex.com/)
 #### RestRequestHelper Basic usage
 ``` C#
 var resultObject = await RestRequestHelper.ProcessGetRequest<MyClass>("http://www.example.com/api/mycall");
