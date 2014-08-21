@@ -29,6 +29,11 @@ namespace Xciles.Uncommon.Net
 
         public static async Task<UncommonResponse<byte[]>> ProcessRawGetRequestAsync(string requestUri, UncommonRequestOptions options = null)
         {
+            // Make sure the options are set and set the responseSerializer to use ByteArray
+            options = SetRestRequestOptions(options);
+
+            options.ResponseSerializer = EUncommonResponseSerializer.UseByteArray;
+
             var result = await ProcessRequest<NoRequestContent, byte[]>(EUncommonRequestMethod.GET, requestUri, null, options);
             result.Result = result.RawResponseContent;
             result.RawResponseContent = null;
