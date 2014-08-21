@@ -160,7 +160,7 @@ namespace Xciles.Uncommon.Net
                 Content = content
             };
 
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(CreateHttpAcceptHeader(options.ResponseSerializer)));
+            SetHttpAcceptHeader(request, options.ResponseSerializer);
             if (options.Headers != null)
             {
                 foreach (var header in options.Headers)
@@ -294,17 +294,26 @@ namespace Xciles.Uncommon.Net
             //};
         }
 
-        private static string CreateHttpAcceptHeader(EUncommonResponseSerializer responseSerializer)
+        private static void SetHttpAcceptHeader(HttpRequestMessage request, EUncommonResponseSerializer responseSerializer)
         {
+            string acceptHeader;
             switch (responseSerializer)
             {
                 case EUncommonResponseSerializer.UseXmlDataContractSerializer:
                 case EUncommonResponseSerializer.UseXmlSerializer:
-                    return "application/xml";
+                    acceptHeader = "application/xml";
+                    break;
                 case EUncommonResponseSerializer.UseJsonNet:
-                    return "application/json";
+                    acceptHeader = "application/json";
+                    break;
                 default:
-                    return String.Empty;
+                    acceptHeader = String.Empty;
+                    break;
+            }
+
+            if (!String.IsNullOrWhiteSpace(acceptHeader))
+            {
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
             }
         }
 
