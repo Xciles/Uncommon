@@ -90,6 +90,7 @@ namespace Xciles.Uncommon.Net
 
         private static async Task<UncommonResponse<TResponseType>> ProcessRequest<TRequestType, TResponseType>(EUncommonRequestMethod method, string requestUri, TRequestType requestContent, UncommonRequestOptions options)
         {
+            HttpResponseMessage response = null;
             try
             {
                 options = SetRestRequestOptions(options);
@@ -110,7 +111,7 @@ namespace Xciles.Uncommon.Net
                     }
                     var request = CreateRequestMessage(method, requestUri, httpContent, options);
 
-                    var response = await client.SendAsync(request, CancellationToken.None);
+                    response = await client.SendAsync(request, CancellationToken.None);
                     response.EnsureSuccessStatusCode();
 
                     return await ProcessReponseContent<TResponseType>(response, options);
@@ -129,7 +130,32 @@ namespace Xciles.Uncommon.Net
             }
             catch (HttpRequestException ex)
             {
-                throw; // change to properly handle exceptions
+                var exception = ex.InnerException as WebException;
+                if (exception != null)
+                {
+                    throw HandleWebException(exception);
+                }
+
+                ServiceExceptionResult responseContent = null;
+                try
+                {
+                    responseContent = ProcessReponseContent<ServiceExceptionResult>(response, options).Result.Result;
+                }
+                catch (JsonSerializationException)
+                {
+                }
+
+                throw new UncommonRequestException()
+                {
+                    Exception = ex,
+                    Information = "HttpRequestException",
+                    StatusCode = response != null ? response.StatusCode : HttpStatusCode.BadRequest,
+                    WebExceptionStatus = WebExceptionStatus.UnknownError,
+                    RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError,
+                    ServiceExceptionResult = responseContent
+                };
+
+                //throw; // change to properly handle exceptions
             }
             catch (TaskCanceledException ex)
             {
@@ -149,6 +175,82 @@ namespace Xciles.Uncommon.Net
                     StatusCode = HttpStatusCode.NotFound,
                     Exception = ex
                 };
+            }
+        }
+
+        private static UncommonRequestException HandleWebException(WebException webException)
+        {
+            // WebExceptionStatus does (or did) not contain all posible statusses returned by the webRequest on certain platforms (Xamarin based).
+            // Therefor we have to check by string...............................................
+            // ¯\(°_o)/¯
+
+            switch (webException.Status.ToString("G"))
+            {
+                case "RequestCanceled":
+                    {
+                        // Request is cancelled because of timeout.
+                        return new UncommonRequestException()
+                        {
+                            RequestExceptionStatus = EUncommonRequestExceptionStatus.Timeout
+                        };
+                    }
+                case "ConnectFailure":
+                case "NameResolutionFailure":
+                    {
+                        return new UncommonRequestException
+                        {
+                            RequestExceptionStatus = EUncommonRequestExceptionStatus.NoConnection
+                        };
+                    }
+                case "SendFailure":
+                    {
+                        return new UncommonRequestException
+                        {
+                            RequestExceptionStatus = EUncommonRequestExceptionStatus.Failed
+                        };
+                    }
+                default:
+                    var requestException = new UncommonRequestException();
+                    if (webException.Response != null)
+                    {
+                        var response = (HttpWebResponse)webException.Response;
+                        using (var responseStream = response.GetResponseStream())
+                        {
+                            // Moved objectAsString outside of try because of NotSupportedException occurs when reading the stream twice. (Seek to begin throws)
+                            // This also only happens on Xamarin based platforms
+                            string objectAsString = String.Empty;
+                            try
+                            {
+                                using (var reader = new StreamReader(responseStream))
+                                {
+                                    objectAsString = reader.ReadToEnd();
+                                    var exceptionResult = JsonConvert.DeserializeObject<ServiceExceptionResult>(objectAsString, JsonSerializerSettings);
+
+                                    requestException.ServiceExceptionResult = exceptionResult;
+                                    requestException.RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError;
+                                }
+                            }
+                            catch (JsonSerializationException ex)
+                            {
+                                requestException.Information = objectAsString;
+                                requestException.Exception = ex;
+                                requestException.RequestExceptionStatus = EUncommonRequestExceptionStatus.SerializationError;
+                            }
+                            finally
+                            {
+                                requestException.RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError;
+                            }
+                        }
+                        requestException.StatusCode = response.StatusCode;
+                    }
+                    else
+                    {
+                        requestException.RequestExceptionStatus = EUncommonRequestExceptionStatus.UnknownError;
+                    }
+
+                    requestException.WebExceptionStatus = webException.Status;
+
+                    return requestException;
             }
         }
 
