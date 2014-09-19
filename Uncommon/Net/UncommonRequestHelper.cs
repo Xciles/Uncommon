@@ -468,6 +468,7 @@ namespace Xciles.Uncommon.Net
                 var serializer = new DataContractSerializer(typeof(TRequestType));
                 serializer.WriteObject(memoryStream, modelObject);
 
+                memoryStream.Position = 0;
                 return new StreamReader(memoryStream).ReadToEnd();
             } 
         }
@@ -479,6 +480,7 @@ namespace Xciles.Uncommon.Net
                 var serializer = new XmlSerializer(typeof(TRequestType));
                 serializer.Serialize(memoryStream, modelObject);
 
+                memoryStream.Position = 0;
                 return new StreamReader(memoryStream).ReadToEnd();
             }
         }
