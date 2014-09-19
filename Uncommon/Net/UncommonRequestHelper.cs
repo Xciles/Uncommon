@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -105,17 +106,49 @@ namespace Xciles.Uncommon.Net
                     client.Timeout = new TimeSpan(0, 0, 0, 0, options.Timeout);
 
                     HttpContent httpContent = null;
-                    if (typeof(TRequestType) != typeof(NoRequestContent))
+                    if (typeof (TRequestType) != typeof (NoRequestContent))
                     {
                         httpContent = await GenerateRequestContent(requestContent, options);
                     }
                     var request = CreateRequestMessage(method, requestUri, httpContent, options);
 
                     response = await client.SendAsync(request, CancellationToken.None);
-                    response.EnsureSuccessStatusCode();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return await ProcessReponseContent<TResponseType>(response, options);
+                    }
+                    else
+                    {
+                        var requestException = new UncommonRequestException()
+                        {
+                            Information = "RequestException: ",
+                            StatusCode = response.StatusCode,
+                            WebExceptionStatus = WebExceptionStatus.UnknownError,
+                            RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError
+                        };
+                        string resultAsString = "";
+                        try
+                        {
+                            resultAsString = response.Content.ReadAsStringAsync().Result;
+                            var responseContent = JsonConvert.DeserializeObject<ServiceExceptionResult>(resultAsString, JsonSerializerSettings);
+                            requestException.ServiceExceptionResult = responseContent;
+                        }
+                        catch (JsonSerializationException)
+                        {
+                            requestException.Information += resultAsString;
+                        }
+                        catch (JsonReaderException)
+                        {
+                            requestException.Information += resultAsString;
+                        }
 
-                    return await ProcessReponseContent<TResponseType>(response, options);
+                        throw requestException;
+                    }
                 }
+            }
+            catch (UncommonRequestException)
+            {
+                throw;
             }
             catch (JsonSerializationException ex)
             {
@@ -136,26 +169,16 @@ namespace Xciles.Uncommon.Net
                     throw HandleWebException(exception);
                 }
 
-                ServiceExceptionResult responseContent = null;
-                try
-                {
-                    responseContent = ProcessReponseContent<ServiceExceptionResult>(response, options).Result.Result;
-                }
-                catch (JsonSerializationException)
-                {
-                }
-
-                throw new UncommonRequestException()
+                var requestException = new UncommonRequestException()
                 {
                     Exception = ex,
                     Information = "HttpRequestException",
                     StatusCode = response != null ? response.StatusCode : HttpStatusCode.BadRequest,
                     WebExceptionStatus = WebExceptionStatus.UnknownError,
-                    RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError,
-                    ServiceExceptionResult = responseContent
+                    RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError
                 };
 
-                //throw; // change to properly handle exceptions
+                throw requestException;
             }
             catch (TaskCanceledException ex)
             {
@@ -213,7 +236,7 @@ namespace Xciles.Uncommon.Net
                     var requestException = new UncommonRequestException();
                     if (webException.Response != null)
                     {
-                        var response = (HttpWebResponse)webException.Response;
+                        var response = (HttpWebResponse)webException.Response; // Is this stil needed? Since this will no longer happen unless something really bad happend.
                         using (var responseStream = response.GetResponseStream())
                         {
                             // Moved objectAsString outside of try because of NotSupportedException occurs when reading the stream twice. (Seek to begin throws)
@@ -293,12 +316,18 @@ namespace Xciles.Uncommon.Net
             {
                 case EUncommonRequestSerializer.UseXmlDataContractSerializer:
                     {
-                        throw new NotSupportedException();
+                        var requestBody = await Task.Factory.StartNew(() => ConvertModelObjectByXmlDataContactToString(requestContent)).ConfigureAwait(false);
+
+                        httpContent = new StringContent(requestBody);
+                        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/xml");
                     }
                     break;
                 case EUncommonRequestSerializer.UseXmlSerializer:
                     {
-                        throw new NotSupportedException();
+                        var requestBody = await Task.Factory.StartNew(() => ConvertModelObjectByXmlToString(requestContent)).ConfigureAwait(false);
+
+                        httpContent = new StringContent(requestBody);
+                        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/xml");
                     }
                     break;
                 case EUncommonRequestSerializer.UseByteArray:
@@ -316,7 +345,8 @@ namespace Xciles.Uncommon.Net
                     break;
                 case EUncommonRequestSerializer.UseStringUrlPost:
                     {
-                        throw new NotSupportedException();
+                        httpContent = new StringContent(requestContent.ToString());
+                        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
                     }
                     break;
                 default:
@@ -429,6 +459,28 @@ namespace Xciles.Uncommon.Net
             }
 
             return options;
+        }
+
+        private static string ConvertModelObjectByXmlDataContactToString<TRequestType>(TRequestType modelObject)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                var serializer = new DataContractSerializer(typeof(TRequestType));
+                serializer.WriteObject(memoryStream, modelObject);
+
+                return new StreamReader(memoryStream).ReadToEnd();
+            } 
+        }
+
+        private static string ConvertModelObjectByXmlToString<TRequestType>(TRequestType modelObject)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                var serializer = new XmlSerializer(typeof(TRequestType));
+                serializer.Serialize(memoryStream, modelObject);
+
+                return new StreamReader(memoryStream).ReadToEnd();
+            }
         }
 
         private static TResponseType ConvertResponseToModelObjectFromDataContractXml<TResponseType>(Stream resultAsStream)
