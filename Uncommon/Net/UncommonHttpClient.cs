@@ -46,7 +46,7 @@ namespace Xciles.Uncommon.Net
             httpResponseMessage.EnsureSuccessStatusCode();
 
             var resultAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(resultAsString, JsonSerializerSettings), cancellationToken).ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<T>(resultAsString, JsonSerializerSettings);
         }
 
         public async Task<HttpResponseMessage> PostContentAsJsonAsync<T>(string requestUrl, T requestContent)
@@ -66,7 +66,7 @@ namespace Xciles.Uncommon.Net
 
         public async Task<HttpResponseMessage> PostContentAsJsonAsync<T>(Uri requestUri, T requestContent, CancellationToken cancellationToken)
         {
-            var requestBody = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(requestContent, JsonSerializerSettings), cancellationToken).ConfigureAwait(false);
+            var requestBody = JsonConvert.SerializeObject(requestContent, JsonSerializerSettings);
 
             HttpContent httpContent = new StringContent(requestBody);
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -91,7 +91,7 @@ namespace Xciles.Uncommon.Net
 
         public async Task<HttpResponseMessage> PutContentAsJsonAsync<T>(Uri requestUri, T requestContent, CancellationToken cancellationToken)
         {
-            var requestBody = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(requestContent, JsonSerializerSettings), cancellationToken).ConfigureAwait(false);
+            var requestBody = JsonConvert.SerializeObject(requestContent, JsonSerializerSettings);
 
             HttpContent httpContent = new StringContent(requestBody);
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -116,7 +116,7 @@ namespace Xciles.Uncommon.Net
 
         public async Task<HttpResponseMessage> PatchContentAsJsonAsync<T>(Uri requestUri, T requestContent, CancellationToken cancellationToken)
         {
-            var requestBody = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(requestContent, JsonSerializerSettings), cancellationToken).ConfigureAwait(false);
+            var requestBody = JsonConvert.SerializeObject(requestContent, JsonSerializerSettings);
 
             HttpContent httpContent = new StringContent(requestBody);
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");

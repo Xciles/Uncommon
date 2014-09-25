@@ -316,7 +316,7 @@ namespace Xciles.Uncommon.Net
             {
                 case EUncommonRequestSerializer.UseXmlDataContractSerializer:
                     {
-                        var requestBody = await Task.Factory.StartNew(() => ConvertModelObjectByXmlDataContactToString(requestContent)).ConfigureAwait(false);
+                        var requestBody = await ConvertModelObjectByXmlDataContactToString(requestContent).ConfigureAwait(false);
 
                         httpContent = new StringContent(requestBody);
                         httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/xml");
@@ -324,7 +324,7 @@ namespace Xciles.Uncommon.Net
                     break;
                 case EUncommonRequestSerializer.UseXmlSerializer:
                     {
-                        var requestBody = await Task.Factory.StartNew(() => ConvertModelObjectByXmlToString(requestContent)).ConfigureAwait(false);
+                        var requestBody = await ConvertModelObjectByXmlToString(requestContent).ConfigureAwait(false);
 
                         httpContent = new StringContent(requestBody);
                         httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/xml");
@@ -337,7 +337,7 @@ namespace Xciles.Uncommon.Net
                     break;
                 case EUncommonRequestSerializer.UseJsonNet:
                     {
-                        var requestBody = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(requestContent, JsonSerializerSettings)).ConfigureAwait(false);
+                        var requestBody = JsonConvert.SerializeObject(requestContent, JsonSerializerSettings);
 
                         httpContent = new StringContent(requestBody);
                         httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -371,20 +371,20 @@ namespace Xciles.Uncommon.Net
                 {
                     case EUncommonResponseSerializer.UseXmlDataContractSerializer:
                         {
-                            var resultAsStream = await response.Content.ReadAsStreamAsync();
-                            restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromDataContractXml<TResponseType>(resultAsStream)).ConfigureAwait(false);
+                            var resultAsStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                            restResponse.Result = ConvertResponseToModelObjectFromDataContractXml<TResponseType>(resultAsStream);
                         }
                         break;
                     case EUncommonResponseSerializer.UseXmlSerializer:
                         {
-                            var resultAsStream = await response.Content.ReadAsStreamAsync();
-                            restResponse.Result = await Task.Factory.StartNew(() => ConvertResponseToModelObjectFromXml<TResponseType>(resultAsStream)).ConfigureAwait(false);
+                            var resultAsStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                            restResponse.Result = ConvertResponseToModelObjectFromXml<TResponseType>(resultAsStream);
                         }
                         break;
                     case EUncommonResponseSerializer.UseJsonNet:
                         {
-                            var resultAsString = await response.Content.ReadAsStringAsync();
-                            restResponse.Result = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<TResponseType>(resultAsString, JsonSerializerSettings)).ConfigureAwait(false);
+                            var resultAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            restResponse.Result = JsonConvert.DeserializeObject<TResponseType>(resultAsString, JsonSerializerSettings);
                         }
                         break;
                     case EUncommonResponseSerializer.UseByteArray:
@@ -469,7 +469,7 @@ namespace Xciles.Uncommon.Net
                 serializer.WriteObject(memoryStream, modelObject);
 
                 memoryStream.Position = 0;
-                return await new StreamReader(memoryStream).ReadToEndAsync();
+                return await new StreamReader(memoryStream).ReadToEndAsync().ConfigureAwait(false);
             } 
         }
 
@@ -481,7 +481,7 @@ namespace Xciles.Uncommon.Net
                 serializer.Serialize(memoryStream, modelObject);
 
                 memoryStream.Position = 0;
-                return await new StreamReader(memoryStream).ReadToEndAsync();
+                return await new StreamReader(memoryStream).ReadToEndAsync().ConfigureAwait(false);
             }
         }
 
