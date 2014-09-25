@@ -25,7 +25,7 @@ namespace Xciles.Uncommon.Net
 
         public static async Task<UncommonResponse<TResponseType>> ProcessGetRequestAsync<TResponseType>(string requestUri, UncommonRequestOptions options = null)
         {
-            return await ProcessRequest<NoRequestContent, TResponseType>(EUncommonRequestMethod.GET, requestUri, null, options);
+            return await ProcessRequest<NoRequestContent, TResponseType>(EUncommonRequestMethod.GET, requestUri, null, options).ConfigureAwait(false);
         }
 
         public static async Task<UncommonResponse<byte[]>> ProcessRawGetRequestAsync(string requestUri, UncommonRequestOptions options = null)
@@ -35,7 +35,7 @@ namespace Xciles.Uncommon.Net
 
             options.ResponseSerializer = EUncommonResponseSerializer.UseByteArray;
 
-            var result = await ProcessRequest<NoRequestContent, byte[]>(EUncommonRequestMethod.GET, requestUri, null, options);
+            var result = await ProcessRequest<NoRequestContent, byte[]>(EUncommonRequestMethod.GET, requestUri, null, options).ConfigureAwait(false);
             result.Result = result.RawResponseContent;
             result.RawResponseContent = null;
             // will this work??
@@ -45,47 +45,47 @@ namespace Xciles.Uncommon.Net
 
         public static async Task<UncommonResponse<NoResponseContent>> ProcessPostRequestAsync<TRequestType>(string requestUri, TRequestType requestContent, UncommonRequestOptions options = null)
         {
-            return await ProcessRequest<TRequestType, NoResponseContent>(EUncommonRequestMethod.POST, requestUri, requestContent, options);
+            return await ProcessRequest<TRequestType, NoResponseContent>(EUncommonRequestMethod.POST, requestUri, requestContent, options).ConfigureAwait(false);
         }
 
         public static async Task<UncommonResponse<TResponseType>> ProcessPostRequestAsync<TRequestType, TResponseType>(string requestUri, TRequestType requestContent, UncommonRequestOptions options = null)
         {
-            return await ProcessRequest<TRequestType, TResponseType>(EUncommonRequestMethod.POST, requestUri, requestContent, options);
+            return await ProcessRequest<TRequestType, TResponseType>(EUncommonRequestMethod.POST, requestUri, requestContent, options).ConfigureAwait(false);
         }
 
         public static async Task<UncommonResponse<NoResponseContent>> ProcessPutRequestAsync<TRequestType>(string requestUri, TRequestType requestContent, UncommonRequestOptions options = null)
         {
-            return await ProcessRequest<TRequestType, NoResponseContent>(EUncommonRequestMethod.PUT, requestUri, requestContent, options);
+            return await ProcessRequest<TRequestType, NoResponseContent>(EUncommonRequestMethod.PUT, requestUri, requestContent, options).ConfigureAwait(false);
         }
 
         public static async Task<UncommonResponse<TResponseType>> ProcessPutRequestAsync<TRequestType, TResponseType>(string requestUri, TRequestType requestContent, UncommonRequestOptions options = null)
         {
-            return await ProcessRequest<TRequestType, TResponseType>(EUncommonRequestMethod.PUT, requestUri, requestContent, options);
+            return await ProcessRequest<TRequestType, TResponseType>(EUncommonRequestMethod.PUT, requestUri, requestContent, options).ConfigureAwait(false);
         }
 
         public static async Task<UncommonResponse<NoResponseContent>> ProcessPatchRequestAsync<TRequestType>(string requestUri, TRequestType requestContent, UncommonRequestOptions options = null)
         {
-            return await ProcessRequest<TRequestType, NoResponseContent>(EUncommonRequestMethod.PATCH, requestUri, requestContent, options);
+            return await ProcessRequest<TRequestType, NoResponseContent>(EUncommonRequestMethod.PATCH, requestUri, requestContent, options).ConfigureAwait(false);
         }
 
         public static async Task<UncommonResponse<TResponseType>> ProcessPatchRequestAsync<TRequestType, TResponseType>(string requestUri, TRequestType requestContent, UncommonRequestOptions options = null)
         {
-            return await ProcessRequest<TRequestType, TResponseType>(EUncommonRequestMethod.PATCH, requestUri, requestContent, options);
+            return await ProcessRequest<TRequestType, TResponseType>(EUncommonRequestMethod.PATCH, requestUri, requestContent, options).ConfigureAwait(false);
         }
 
         public static async Task<UncommonResponse<NoResponseContent>> ProcessDeleteRequestAsync(string requestUri, UncommonRequestOptions options = null)
         {
-            return await ProcessRequest<NoRequestContent, NoResponseContent>(EUncommonRequestMethod.DELETE, requestUri, null, options);
+            return await ProcessRequest<NoRequestContent, NoResponseContent>(EUncommonRequestMethod.DELETE, requestUri, null, options).ConfigureAwait(false);
         }
 
         public static async Task<UncommonResponse<NoResponseContent>> ProcessDeleteRequestAsync<TRequestType>(string requestUri, TRequestType requestContent, UncommonRequestOptions options = null)
         {
-            return await ProcessRequest<TRequestType, NoResponseContent>(EUncommonRequestMethod.DELETE, requestUri, requestContent, options);
+            return await ProcessRequest<TRequestType, NoResponseContent>(EUncommonRequestMethod.DELETE, requestUri, requestContent, options).ConfigureAwait(false);
         }
 
         public static async Task<UncommonResponse<TResponseType>> ProcessDeleteRequestAsync<TRequestType, TResponseType>(string requestUri, TRequestType requestContent, UncommonRequestOptions options = null)
         {
-            return await ProcessRequest<TRequestType, TResponseType>(EUncommonRequestMethod.DELETE, requestUri, requestContent, options);
+            return await ProcessRequest<TRequestType, TResponseType>(EUncommonRequestMethod.DELETE, requestUri, requestContent, options).ConfigureAwait(false);
         }
 
 
@@ -108,14 +108,14 @@ namespace Xciles.Uncommon.Net
                     HttpContent httpContent = null;
                     if (typeof (TRequestType) != typeof (NoRequestContent))
                     {
-                        httpContent = await GenerateRequestContent(requestContent, options);
+                        httpContent = await GenerateRequestContent(requestContent, options).ConfigureAwait(false);
                     }
                     var request = CreateRequestMessage(method, requestUri, httpContent, options);
 
-                    response = await client.SendAsync(request, CancellationToken.None);
+                    response = await client.SendAsync(request, CancellationToken.None).ConfigureAwait(false);
                     if (response.IsSuccessStatusCode)
                     {
-                        return await ProcessReponseContent<TResponseType>(response, options);
+                        return await ProcessReponseContent<TResponseType>(response, options).ConfigureAwait(false);
                     }
                     else
                     {
@@ -384,12 +384,12 @@ namespace Xciles.Uncommon.Net
                     case EUncommonResponseSerializer.UseJsonNet:
                         {
                             var resultAsString = await response.Content.ReadAsStringAsync();
-                            restResponse.Result = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<TResponseType>(resultAsString, JsonSerializerSettings));
+                            restResponse.Result = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<TResponseType>(resultAsString, JsonSerializerSettings)).ConfigureAwait(false);
                         }
                         break;
                     case EUncommonResponseSerializer.UseByteArray:
                         {
-                            var resultAsBytes = await response.Content.ReadAsByteArrayAsync();
+                            var resultAsBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                             restResponse.RawResponseContent = resultAsBytes;
                         }
                         break;
@@ -461,7 +461,7 @@ namespace Xciles.Uncommon.Net
             return options;
         }
 
-        private static string ConvertModelObjectByXmlDataContactToString<TRequestType>(TRequestType modelObject)
+        private static async Task<string> ConvertModelObjectByXmlDataContactToString<TRequestType>(TRequestType modelObject)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -469,11 +469,11 @@ namespace Xciles.Uncommon.Net
                 serializer.WriteObject(memoryStream, modelObject);
 
                 memoryStream.Position = 0;
-                return new StreamReader(memoryStream).ReadToEnd();
+                return await new StreamReader(memoryStream).ReadToEndAsync();
             } 
         }
 
-        private static string ConvertModelObjectByXmlToString<TRequestType>(TRequestType modelObject)
+        private static async Task<string> ConvertModelObjectByXmlToString<TRequestType>(TRequestType modelObject)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -481,7 +481,7 @@ namespace Xciles.Uncommon.Net
                 serializer.Serialize(memoryStream, modelObject);
 
                 memoryStream.Position = 0;
-                return new StreamReader(memoryStream).ReadToEnd();
+                return await new StreamReader(memoryStream).ReadToEndAsync();
             }
         }
 

@@ -17,11 +17,11 @@ namespace Xciles.Uncommon.Handler
             request.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
 
             // Todo add gzip when sending.
-            var response = await base.SendAsync(request, cancellationToken);
+            var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             if (response.Content.Headers.ContentEncoding.Contains("gzip"))
             {
-                var content = new GZipHttpContent(await response.Content.ReadAsStreamAsync(), response.Content.Headers);
+                var content = new GZipHttpContent(await response.Content.ReadAsStreamAsync().ConfigureAwait(false), response.Content.Headers);
                 response.Content = content;
             }
             return response;
