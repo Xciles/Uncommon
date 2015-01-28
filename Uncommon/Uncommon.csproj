@@ -10,8 +10,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Xciles.Uncommon</RootNamespace>
     <AssemblyName>Xciles.Uncommon</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile158</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
@@ -37,20 +37,11 @@
     <Compile Include="Handler\CompressedHttpContent.cs" />
     <Compile Include="Handler\GZipHttpContent.cs" />
     <Compile Include="Net\EUncommonRequestSerializer.cs" />
-    <Compile Include="Net\ERequestSerializer.cs" />
     <Compile Include="Net\EUncommonResponseSerializer.cs" />
-    <Compile Include="Net\EResponseSerializer.cs" />
     <Compile Include="Net\EUncommonRequestMethod.cs" />
-    <Compile Include="Net\ERestMethod.cs" />
     <Compile Include="Net\EUncommonRequestExceptionStatus.cs" />
-    <Compile Include="Net\ERestRequestExceptionStatus.cs" />
     <Compile Include="Net\UncommonResponse.cs" />
     <Compile Include="Net\UncommonRequestOptions.cs" />
-    <Compile Include="Net\RestRequest.cs" />
-    <Compile Include="Net\RestRequestException.cs" />
-    <Compile Include="Net\RestRequestHelper.cs" />
-    <Compile Include="Net\RestRequestOptions.cs" />
-    <Compile Include="Net\RestResponse.cs" />
     <Compile Include="Net\ServiceExceptionResult.cs" />
     <Compile Include="Net\UncommonHttpClient.cs" />
     <Compile Include="Net\UncommonRequestException.cs" />
@@ -69,9 +60,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO">
-      <HintPath>..\packages\Microsoft.Bcl.1.1.9\lib\portable-net40+sl5+win8+wp8+wpa81\System.IO.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.dll</HintPath>
     </Reference>
@@ -80,12 +68,6 @@
     </Reference>
     <Reference Include="System.Net.Http.Primitives">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime">
-      <HintPath>..\packages\Microsoft.Bcl.1.1.9\lib\portable-net40+sl5+win8+wp8+wpa81\System.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks">
-      <HintPath>..\packages\Microsoft.Bcl.1.1.9\lib\portable-net40+sl5+win8+wp8+wpa81\System.Threading.Tasks.dll</HintPath>
     </Reference>
     <Reference Include="Zlib.Portable">
       <HintPath>..\packages\Zlib.Portable.1.10.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
