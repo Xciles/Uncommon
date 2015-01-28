@@ -352,7 +352,6 @@ namespace Xciles.Uncommon.Net
                 default:
                     // Return value null indicates that wrong RequestSerializer settings are used.
                     throw new NotSupportedException();
-                    break;
             }
 
             return httpContent;
