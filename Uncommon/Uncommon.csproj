@@ -33,6 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Collections\IObservableCollection.cs" />
+    <Compile Include="Collections\ISortedObservableCollection.cs" />
     <Compile Include="Handler\UncommonHttpClientHandler.cs" />
     <Compile Include="Handler\CompressedHttpContent.cs" />
     <Compile Include="Handler\GZipHttpContent.cs" />
