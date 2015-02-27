@@ -3,13 +3,13 @@ using System.Collections.ObjectModel;
 
 namespace Xciles.Uncommon.Collections
 {
-    public class MvvmSortedObservableCollection<T> : ObservableCollection<T>, ISortedObservableCollection<T>
+    public class UncommonSortedObservableCollection<T> : ObservableCollection<T>, ISortedObservableCollection<T>
     {
         private readonly IComparer<T> _comparer;
 
         public bool IsReadOnly { get { return false; } }
 
-        public MvvmSortedObservableCollection(IComparer<T> comparer = null)
+        public UncommonSortedObservableCollection(IComparer<T> comparer = null)
             : base(new List<T>())
         {
             _comparer = comparer ?? Comparer<T>.Default;
