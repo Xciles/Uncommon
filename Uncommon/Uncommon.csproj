@@ -35,6 +35,9 @@
   <ItemGroup>
     <Compile Include="Collections\IObservableCollection.cs" />
     <Compile Include="Collections\ISortedObservableCollection.cs" />
+    <Compile Include="Collections\UncommonSortedObservableCollection.cs" />
+    <Compile Include="Collections\SafeEnumerator.cs" />
+    <Compile Include="Collections\UncommonObservableCollection.cs" />
     <Compile Include="Handler\UncommonHttpClientHandler.cs" />
     <Compile Include="Handler\CompressedHttpContent.cs" />
     <Compile Include="Handler\GZipHttpContent.cs" />
