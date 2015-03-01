@@ -88,7 +88,7 @@
     <Compile Include="Collections\UncommonObservableCollectionTests.cs" />
     <Compile Include="Collections\UncommonSortedObservableCollectionTests.cs" />
     <Compile Include="Net\Person.cs" />
-    <Compile Include="Net\RestRequestHelperJsonTests.cs" />
+    <Compile Include="Net\UncommonHttpClientCancelationTests.cs" />
     <Compile Include="Net\UncommonHttpClientGzipTest.cs" />
     <Compile Include="Net\UncommonHttpClientQuickTests.cs" />
     <Compile Include="Net\UncommonHttpClientTests.cs" />
