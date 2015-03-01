@@ -39,8 +39,6 @@
     <Compile Include="Collections\SafeEnumerator.cs" />
     <Compile Include="Collections\UncommonObservableCollection.cs" />
     <Compile Include="Handler\UncommonHttpClientHandler.cs" />
-    <Compile Include="Handler\CompressedHttpContent.cs" />
-    <Compile Include="Handler\GZipHttpContent.cs" />
     <Compile Include="Net\EUncommonRequestSerializer.cs" />
     <Compile Include="Net\EUncommonResponseSerializer.cs" />
     <Compile Include="Net\EUncommonRequestMethod.cs" />
