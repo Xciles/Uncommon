@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.MvvmCross.Plugins.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone", "MvvmCross\Plugins\Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone\Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone.csproj", "{9E1E2CA6-DB24-4814-A9D1-05B6B6B3101B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.MvvmCross.Plugins.ProtectedStore.Droid", "MvvmCross\Plugins\Uncommon.MvvmCross.Plugins.ProtectedStore.Droid\Uncommon.MvvmCross.Plugins.ProtectedStore.Droid.csproj", "{7D6010B5-AC3B-4FF1-AA8C-6C1A302906A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,14 @@ Global
 		{9E1E2CA6-DB24-4814-A9D1-05B6B6B3101B}.Release|ARM.Build.0 = Release|ARM
 		{9E1E2CA6-DB24-4814-A9D1-05B6B6B3101B}.Release|x86.ActiveCfg = Release|x86
 		{9E1E2CA6-DB24-4814-A9D1-05B6B6B3101B}.Release|x86.Build.0 = Release|x86
+		{7D6010B5-AC3B-4FF1-AA8C-6C1A302906A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D6010B5-AC3B-4FF1-AA8C-6C1A302906A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D6010B5-AC3B-4FF1-AA8C-6C1A302906A1}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{7D6010B5-AC3B-4FF1-AA8C-6C1A302906A1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7D6010B5-AC3B-4FF1-AA8C-6C1A302906A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D6010B5-AC3B-4FF1-AA8C-6C1A302906A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D6010B5-AC3B-4FF1-AA8C-6C1A302906A1}.Release|ARM.ActiveCfg = Release|Any CPU
+		{7D6010B5-AC3B-4FF1-AA8C-6C1A302906A1}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,5 +114,6 @@ Global
 		{D35D00A8-9E37-47C0-A318-AF51D79507BA} = {0DDF3E23-40D5-416A-A8AA-4312889E0E74}
 		{3E9E5523-71F9-4B9A-9CC2-E3DB8AB5355C} = {FCBA150D-CD22-43FE-A308-DA7C635D7C00}
 		{9E1E2CA6-DB24-4814-A9D1-05B6B6B3101B} = {FCBA150D-CD22-43FE-A308-DA7C635D7C00}
+		{7D6010B5-AC3B-4FF1-AA8C-6C1A302906A1} = {FCBA150D-CD22-43FE-A308-DA7C635D7C00}
 	EndGlobalSection
 EndGlobal

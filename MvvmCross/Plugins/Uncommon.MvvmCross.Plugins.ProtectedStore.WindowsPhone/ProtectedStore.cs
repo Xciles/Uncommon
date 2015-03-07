@@ -59,10 +59,5 @@ namespace Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone
         {
             return String.Format("Uncommon-{0}", identifier);
         }
-
-        public void CreateStore()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

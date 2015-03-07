@@ -7,7 +7,6 @@ namespace Uncommon.MvvmCross.Plugins.ProtectedStorage
 {
     public interface IProtectedStore
     {
-        void CreateStore();
         IEnumerable<string> GetStringsForIdentifier(string identifier);
         void Save(string stringToSave, string identifier);
         void Delete(string identifier);
