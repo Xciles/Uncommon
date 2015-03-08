@@ -14,6 +14,15 @@ namespace Xciles.Uncommon.Tests.Net
     [TestClass]
     public class UncommonHttpClientTests
     {
+        private readonly Person _person = new Person
+        {
+            DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
+            Firstname = "First",
+            Lastname = "Person",
+            PhoneNumber = "0123456789",
+            SomeString = "This is just a string"
+        };
+
         #region Get Tests
 
         [TestMethod]
@@ -26,20 +35,11 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.GetAsyncUriHttpCompletionOptionCancellationToken = (httpClient, uri, arg3, arg4) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
                     {
-                        Content = new StringContent(JsonConvert.SerializeObject(person)),
+                        Content = new StringContent(JsonConvert.SerializeObject(_person)),
                         StatusCode = HttpStatusCode.OK
                     });
                 };
@@ -48,9 +48,9 @@ namespace Xciles.Uncommon.Tests.Net
                 {
                     var result = await client.GetJsonAsync<Person>("http://www.xciles.com/");
 
-                    Assert.AreEqual(person.Firstname, result.Firstname);
-                    Assert.AreEqual(person.Lastname, result.Lastname);
-                    Assert.AreEqual(person.PhoneNumber, result.PhoneNumber);
+                    Assert.AreEqual(_person.Firstname, result.Firstname);
+                    Assert.AreEqual(_person.Lastname, result.Lastname);
+                    Assert.AreEqual(_person.PhoneNumber, result.PhoneNumber);
                 }
             }
         }
@@ -65,20 +65,11 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.GetAsyncUriHttpCompletionOptionCancellationToken = (httpClient, uri, arg3, arg4) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
                     {
-                        Content = new StringContent(JsonConvert.SerializeObject(person)),
+                        Content = new StringContent(JsonConvert.SerializeObject(_person)),
                         StatusCode = HttpStatusCode.OK
                     });
                 };
@@ -87,9 +78,9 @@ namespace Xciles.Uncommon.Tests.Net
                 {
                     var result = await client.GetJsonAsync<Person>(new Uri("http://www.xciles.com/"));
 
-                    Assert.AreEqual(person.Firstname, result.Firstname);
-                    Assert.AreEqual(person.Lastname, result.Lastname);
-                    Assert.AreEqual(person.PhoneNumber, result.PhoneNumber);
+                    Assert.AreEqual(_person.Firstname, result.Firstname);
+                    Assert.AreEqual(_person.Lastname, result.Lastname);
+                    Assert.AreEqual(_person.PhoneNumber, result.PhoneNumber);
                 }
             }
         }
@@ -108,15 +99,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.PostAsyncUriHttpContentCancellationToken = (client, uri, arg3, arg4) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -127,7 +109,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var result = await client.PostContentAsJsonAsync("http://www.xciles.com/", person);
+                    var result = await client.PostContentAsJsonAsync("http://www.xciles.com/", _person);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
                 }
@@ -144,15 +126,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.PostAsyncUriHttpContentCancellationToken = (client, uri, arg3, arg4) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -163,7 +136,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var result = await client.PostContentAsJsonAsync("http://www.xciles.com/", person, CancellationToken.None);
+                    var result = await client.PostContentAsJsonAsync("http://www.xciles.com/", _person, CancellationToken.None);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
                 }
@@ -180,15 +153,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.PostAsyncUriHttpContentCancellationToken = (client, uri, arg3, arg4) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -199,7 +163,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var result = await client.PostContentAsJsonAsync(new Uri("http://www.xciles.com/"), person);
+                    var result = await client.PostContentAsJsonAsync(new Uri("http://www.xciles.com/"), _person);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
                 }
@@ -220,15 +184,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.PutAsyncUriHttpContentCancellationToken = (client, uri, arg3, arg4) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -239,7 +194,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var result = await client.PutContentAsJsonAsync("http://www.xciles.com/", person);
+                    var result = await client.PutContentAsJsonAsync("http://www.xciles.com/", _person);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
                 }
@@ -256,15 +211,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.PutAsyncUriHttpContentCancellationToken = (client, uri, arg3, arg4) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -275,7 +221,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var result = await client.PutContentAsJsonAsync("http://www.xciles.com/", person, CancellationToken.None);
+                    var result = await client.PutContentAsJsonAsync("http://www.xciles.com/", _person, CancellationToken.None);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
                 }
@@ -292,15 +238,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.PutAsyncUriHttpContentCancellationToken = (client, uri, arg3, arg4) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -311,7 +248,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var result = await client.PutContentAsJsonAsync(new Uri("http://www.xciles.com/"), person);
+                    var result = await client.PutContentAsJsonAsync(new Uri("http://www.xciles.com/"), _person);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
                 }
@@ -332,15 +269,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.SendAsyncHttpRequestMessage = (client, message) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -351,7 +279,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var content = new StringContent(JsonConvert.SerializeObject(person));
+                    var content = new StringContent(JsonConvert.SerializeObject(_person));
                     var result = await client.PatchAsync("http://www.xciles.com/", content);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
@@ -369,15 +297,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken = (client, message, token) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -388,7 +307,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var content = new StringContent(JsonConvert.SerializeObject(person));
+                    var content = new StringContent(JsonConvert.SerializeObject(_person));
                     var result = await client.PatchAsync("http://www.xciles.com/", content, CancellationToken.None);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
@@ -406,15 +325,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.SendAsyncHttpRequestMessage = (client, message) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -425,7 +335,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var content = new StringContent(JsonConvert.SerializeObject(person));
+                    var content = new StringContent(JsonConvert.SerializeObject(_person));
                     var result = await client.PatchAsync(new Uri("http://www.xciles.com/"), content);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
@@ -448,15 +358,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken = (client, message, token) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -467,7 +368,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var result = await client.PatchContentAsJsonAsync("http://www.xciles.com/", person);
+                    var result = await client.PatchContentAsJsonAsync("http://www.xciles.com/", _person);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
                 }
@@ -484,15 +385,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken = (client, message, token) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -503,7 +395,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var result = await client.PatchContentAsJsonAsync("http://www.xciles.com/", person, CancellationToken.None);
+                    var result = await client.PatchContentAsJsonAsync("http://www.xciles.com/", _person, CancellationToken.None);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
                 }
@@ -520,15 +412,6 @@ namespace Xciles.Uncommon.Tests.Net
         {
             using (ShimsContext.Create())
             {
-                var person = new Person
-                {
-                    DateOfBirth = DateTime.Now.Subtract(new TimeSpan(800, 1, 1, 1)),
-                    Firstname = "First",
-                    Lastname = "Person",
-                    PhoneNumber = "0123456789",
-                    SomeString = "This is just a string"
-                };
-
                 ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken = (client, message, token) =>
                 {
                     return Task.FromResult(new HttpResponseMessage()
@@ -539,7 +422,7 @@ namespace Xciles.Uncommon.Tests.Net
 
                 using (var client = new UncommonHttpClient())
                 {
-                    var result = await client.PatchContentAsJsonAsync(new Uri("http://www.xciles.com/"), person);
+                    var result = await client.PatchContentAsJsonAsync(new Uri("http://www.xciles.com/"), _person);
 
                     Assert.IsTrue(result.StatusCode == HttpStatusCode.OK);
                 }
