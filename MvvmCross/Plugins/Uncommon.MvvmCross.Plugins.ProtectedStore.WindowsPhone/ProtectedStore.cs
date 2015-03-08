@@ -29,9 +29,9 @@ namespace Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone
             }
         }
 
-        public void Save(string stringToSafe, string identifier)
+        public void Save(string stringToSave, string identifier)
         {
-            var dataAsBytes = Encoding.UTF8.GetBytes(stringToSafe);
+            var dataAsBytes = Encoding.UTF8.GetBytes(stringToSave);
             var protectedData = ProtectedData.Protect(dataAsBytes, null);
 
             var path = GetStringsPath(identifier);
