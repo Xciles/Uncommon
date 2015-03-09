@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Foundation;
 using Security;
-using Uncommon.MvvmCross.Plugins.ProtectedStorage;
 
 namespace Uncommon.MvvmCross.Plugins.ProtectedStore.Touch
 {

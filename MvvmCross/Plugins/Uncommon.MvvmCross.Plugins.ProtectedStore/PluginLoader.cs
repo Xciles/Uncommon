@@ -1,7 +1,7 @@
 ﻿using Cirrious.CrossCore;
 using Cirrious.CrossCore.Plugins;
 
-namespace Uncommon.MvvmCross.Plugins.ProtectedStorage
+namespace Uncommon.MvvmCross.Plugins.ProtectedStore
 {
     public class PluginLoader : IMvxPluginLoader
     {

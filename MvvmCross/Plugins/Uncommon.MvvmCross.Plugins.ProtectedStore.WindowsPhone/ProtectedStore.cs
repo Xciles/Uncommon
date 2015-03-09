@@ -4,7 +4,6 @@ using System.IO;
 using System.IO.IsolatedStorage;
 using System.Security.Cryptography;
 using System.Text;
-using Uncommon.MvvmCross.Plugins.ProtectedStorage;
 
 namespace Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone
 {

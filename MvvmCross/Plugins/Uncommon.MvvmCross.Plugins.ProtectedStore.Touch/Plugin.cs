@@ -1,6 +1,5 @@
 ﻿using Cirrious.CrossCore;
 using Cirrious.CrossCore.Plugins;
-using Uncommon.MvvmCross.Plugins.ProtectedStorage;
 
 namespace Uncommon.MvvmCross.Plugins.ProtectedStore.Touch
 {

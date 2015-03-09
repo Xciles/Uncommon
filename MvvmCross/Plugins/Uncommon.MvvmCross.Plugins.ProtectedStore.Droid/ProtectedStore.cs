@@ -3,7 +3,6 @@ using System.Text;
 using Android.Content;
 using Java.Security;
 using Javax.Crypto;
-using Uncommon.MvvmCross.Plugins.ProtectedStorage;
 
 namespace Uncommon.MvvmCross.Plugins.ProtectedStore.Droid
 {
