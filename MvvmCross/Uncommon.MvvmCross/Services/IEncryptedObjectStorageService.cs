@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Uncommon.MvvmCross.Services
+namespace Xciles.Uncommon.MvvmCross.Services
 {
     public interface IEncryptedObjectStorageService<T>
     {

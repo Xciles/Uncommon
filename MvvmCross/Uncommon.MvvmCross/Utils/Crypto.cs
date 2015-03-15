@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using PCLCrypto;
 
-namespace Uncommon.MvvmCross.Utils
+namespace Xciles.Uncommon.MvvmCross.Utils
 {
     /// <summary>    
     /// Common cryptographic helper 

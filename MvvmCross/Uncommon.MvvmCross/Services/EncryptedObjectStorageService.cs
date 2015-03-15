@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Uncommon.MvvmCross.Utils;
+using Xciles.Uncommon.MvvmCross.Utils;
 
-namespace Uncommon.MvvmCross.Services
+namespace Xciles.Uncommon.MvvmCross.Services
 {
     public class EncryptedObjectStorageService<T> : IEncryptedObjectStorageService<T>
     {

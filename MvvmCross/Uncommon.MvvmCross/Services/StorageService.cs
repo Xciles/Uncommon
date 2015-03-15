@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Cirrious.CrossCore.Platform;
 using Cirrious.MvvmCross.Plugins.File;
 
-namespace Uncommon.MvvmCross.Services
+namespace Xciles.Uncommon.MvvmCross.Services
 {
     public static class StorageService
     {
