@@ -8,9 +8,9 @@
     <ProjectGuid>{55116CB5-9AC8-478D-A032-5357762463F8}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>Uncommon.MvvmCross.Plugins.ProtectedStore.Touch</RootNamespace>
+    <RootNamespace>Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.Touch</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>Uncommon.MvvmCross.Plugins.ProtectedStore.Touch</AssemblyName>
+    <AssemblyName>Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.Touch</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

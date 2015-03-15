@@ -1,7 +1,7 @@
 ﻿using Cirrious.CrossCore;
 using Cirrious.CrossCore.Plugins;
 
-namespace Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone
+namespace Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone
 {
     public class Plugin : IMvxPlugin
     {

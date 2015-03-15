@@ -1,7 +1,7 @@
 ﻿using Cirrious.CrossCore;
 using Cirrious.CrossCore.Plugins;
 
-namespace Uncommon.MvvmCross.Plugins.ProtectedStore.Droid
+namespace Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.Droid
 {
     public class Plugin : IMvxPlugin
     {

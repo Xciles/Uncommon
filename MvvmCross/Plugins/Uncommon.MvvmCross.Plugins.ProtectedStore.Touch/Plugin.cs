@@ -1,7 +1,7 @@
 ﻿using Cirrious.CrossCore;
 using Cirrious.CrossCore.Plugins;
 
-namespace Uncommon.MvvmCross.Plugins.ProtectedStore.Touch
+namespace Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.Touch
 {
     public class Plugin : IMvxPlugin
     {

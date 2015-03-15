@@ -4,7 +4,7 @@ using System.Linq;
 using Foundation;
 using Security;
 
-namespace Uncommon.MvvmCross.Plugins.ProtectedStore.Touch
+namespace Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.Touch
 {
     public class ProtectedStore : IProtectedStore
     {

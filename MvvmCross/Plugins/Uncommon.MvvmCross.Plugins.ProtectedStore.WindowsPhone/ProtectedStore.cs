@@ -5,7 +5,7 @@ using System.IO.IsolatedStorage;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone
+namespace Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone
 {
     public class ProtectedStore : IProtectedStore
     {

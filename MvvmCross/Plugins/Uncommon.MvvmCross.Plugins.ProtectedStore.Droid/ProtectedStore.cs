@@ -4,7 +4,7 @@ using Android.Content;
 using Java.Security;
 using Javax.Crypto;
 
-namespace Uncommon.MvvmCross.Plugins.ProtectedStore.Droid
+namespace Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.Droid
 {
     public class ProtectedStore : IProtectedStore
     {
