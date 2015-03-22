@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Uncommon.Mvx")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Xciles.Uncommon.MvvmCross")]
+[assembly: AssemblyDescription("A common library for MvvmCross containing usefull 'helpers'.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Uncommon.Mvx")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyProduct("Xciles.Uncommon.MvvmCross")]
+[assembly: AssemblyCopyright("Copyright © Hans Harts")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]

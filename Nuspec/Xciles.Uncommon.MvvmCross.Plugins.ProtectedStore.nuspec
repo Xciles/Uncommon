@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+	<metadata>
+		<id>Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore</id>
+		<version>1.0.0-beta</version>
+		<title>Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore</title>
+		<authors>Hans Harts</authors>
+		<owners>Hans Harts</owners>
+		<licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+		<projectUrl>https://github.com/Xciles/Uncommon</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>ProtectedStore</description>
+		<tags>uncommon xamarin</tags>
+		<dependencies>
+			<dependency id="MvvmCross" version="3.5.0" />
+			<dependency id="MvvmCross.HotTuna.CrossCore" version="3.5.0" />
+			<dependency id="MvvmCross.HotTuna.MvvmCrossLibraries" version="3.5.0" />
+			<dependency id="MvvmCross.HotTuna.StarterPack" version="3.5.0" />
+			<dependency id="MvvmCross.PortableSupport" version="3.5.0" />
+		</dependencies>
+		<releaseNotes>
+1.0.0-beta
+Should add notes ;)
+        </releaseNotes>
+	</metadata>
+	<files>	
+  
+		<!-- PCL -->
+		<file src="..\bin\Debug\Uncommon\Mvx\Portable\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.dll" target="lib\portable-win+net45+wp8+win8+wpa81\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.dll" />
+
+		<!-- Windows Phone -->
+        <file src="..\bin\Debug\Uncommon\Mvx\Portable\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.dll" target="lib\wp8\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.dll" />
+        <file src="..\bin\Debug\Uncommon\Mvx\WindowsPhone\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone.dll" target="lib\wp8\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone.dll" />
+        <file src="BootstrapContent\ProtectedStorePluginBootstrap.cs.pp" target="content\wp8\Bootstrap\ProtectedStorePluginBootstrap.cs.pp" />
+
+		<!-- Droid -->
+        <file src="..\bin\Debug\Uncommon\Mvx\Portable\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.dll" target="lib\MonoAndroid\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.dll" />
+        <file src="..\bin\Debug\Uncommon\Mvx\Droid\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.Droid.dll" target="lib\MonoAndroid\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.Droid.dll" />
+        <file src="BootstrapContent\ProtectedStorePluginBootstrap.cs.pp" target="content\MonoAndroid\Bootstrap\ProtectedStorePluginBootstrap.cs.pp" />
+
+		<!-- iOS -->
+        <file src="..\bin\Debug\Uncommon\Mvx\Portable\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.dll" target="lib\Xamarin.iOS10\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.dll" />
+        <file src="..\bin\Debug\Uncommon\Mvx\Touch\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.Touch.dll" target="lib\Xamarin.iOS10\Xciles.Uncommon.MvvmCross.Plugins.ProtectedStore.Touch.dll" />
+        <file src="TouchBootstrapContent\ProtectedStorePluginBootstrap.cs.pp" target="content\Xamarin.iOS10\Bootstrap\ProtectedStorePluginBootstrap.cs.pp" />
+		
+	</files>
+</package>
