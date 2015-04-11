@@ -57,8 +57,14 @@ namespace Xciles.Uncommon.Tests.Net
                 catch (UncommonRequestException ex)
                 {
                     Assert.IsTrue(ex.RequestExceptionStatus == EUncommonRequestExceptionStatus.ServiceError);
-                    Assert.IsTrue(ex.ServiceExceptionResult.Message != String.Empty);
+                    Assert.IsTrue(ex.ServiceExceptionResult == null);
                     Assert.IsTrue(ex.StatusCode == HttpStatusCode.BadRequest);
+
+                    var responseResult = ex.ConvertExceptionResponseToObject<ExceptionObject>();
+                    Assert.IsTrue(responseResult != null);
+                    Assert.IsTrue(responseResult.Description == exceptionObject.Description);
+                    Assert.IsTrue(responseResult.Message == exceptionObject.Message);
+                    Assert.IsTrue(responseResult.Type == exceptionObject.Type);
                 }
             }
         }
