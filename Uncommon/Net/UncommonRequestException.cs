@@ -15,6 +15,7 @@ namespace Xciles.Uncommon.Net
         public WebExceptionStatus WebExceptionStatus { get; set; }
         public HttpStatusCode StatusCode { get; set; }
 
+        public new Exception InnerException { get; set; }
         internal string ExceptionResponseAsString { get; set; }
 
         public T ConvertExceptionResponseToObject<T>()

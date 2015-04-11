@@ -121,26 +121,13 @@ namespace Xciles.Uncommon.Net
                     {
                         var requestException = new UncommonRequestException()
                         {
-                            Information = "RequestException: ",
+                            Information = "RequestException",
                             StatusCode = response.StatusCode,
                             WebExceptionStatus = WebExceptionStatus.UnknownError,
                             RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError
                         };
-                        string resultAsString = "";
-                        try
-                        {
-                            resultAsString = response.Content.ReadAsStringAsync().Result;
-                            var responseContent = JsonConvert.DeserializeObject<ServiceExceptionResult>(resultAsString, JsonSerializerSettings);
-                            requestException.ServiceExceptionResult = responseContent;
-                        }
-                        catch (JsonSerializationException)
-                        {
-                            requestException.Information += resultAsString;
-                        }
-                        catch (JsonReaderException)
-                        {
-                            requestException.Information += resultAsString;
-                        }
+                        var resultAsString = response.Content.ReadAsStringAsync().Result;
+                        requestException.ExceptionResponseAsString = resultAsString;
 
                         throw requestException;
                     }
@@ -157,7 +144,7 @@ namespace Xciles.Uncommon.Net
                     Information = "JsonSerializationException",
                     StatusCode = HttpStatusCode.OK,
                     WebExceptionStatus = WebExceptionStatus.UnknownError,
-                    Exception = ex,
+                    InnerException = ex,
                     RequestExceptionStatus = EUncommonRequestExceptionStatus.SerializationError
                 };
             }
@@ -171,7 +158,7 @@ namespace Xciles.Uncommon.Net
 
                 var requestException = new UncommonRequestException()
                 {
-                    Exception = ex,
+                    InnerException = ex,
                     Information = "HttpRequestException",
                     StatusCode = response != null ? response.StatusCode : HttpStatusCode.BadRequest,
                     WebExceptionStatus = WebExceptionStatus.UnknownError,
@@ -186,7 +173,7 @@ namespace Xciles.Uncommon.Net
                 throw new UncommonRequestException
                 {
                     RequestExceptionStatus = EUncommonRequestExceptionStatus.Timeout,
-                    Exception = ex
+                    InnerException = ex
                 };
             }
             catch (Exception ex)
@@ -196,7 +183,7 @@ namespace Xciles.Uncommon.Net
                     RequestExceptionStatus = EUncommonRequestExceptionStatus.Undefined,
                     Information = "TheStrangeMonoNullException",
                     StatusCode = HttpStatusCode.NotFound,
-                    Exception = ex
+                    InnerException = ex
                 };
             }
         }
@@ -246,17 +233,14 @@ namespace Xciles.Uncommon.Net
                             {
                                 using (var reader = new StreamReader(responseStream))
                                 {
-                                    objectAsString = reader.ReadToEnd();
-                                    var exceptionResult = JsonConvert.DeserializeObject<ServiceExceptionResult>(objectAsString, JsonSerializerSettings);
-
-                                    requestException.ServiceExceptionResult = exceptionResult;
+                                    requestException.ExceptionResponseAsString = reader.ReadToEnd();
                                     requestException.RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError;
                                 }
                             }
                             catch (JsonSerializationException ex)
                             {
                                 requestException.Information = objectAsString;
-                                requestException.Exception = ex;
+                                requestException.InnerException = ex;
                                 requestException.RequestExceptionStatus = EUncommonRequestExceptionStatus.SerializationError;
                             }
                             finally
