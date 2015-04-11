@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="Collections\UncommonObservableCollectionTests.cs" />
     <Compile Include="Collections\UncommonSortedObservableCollectionTests.cs" />
+    <Compile Include="Net\ExceptionObject.cs" />
     <Compile Include="Net\FakeResponseHandler.cs" />
     <Compile Include="Net\Person.cs" />
     <Compile Include="Net\UncommonHttpClientCancelationTests.cs" />

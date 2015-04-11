@@ -50,5 +50,49 @@ namespace Xciles.Uncommon.Tests.Net
                 Assert.AreEqual(_person.PhoneNumber, result.Result.PhoneNumber);
             }
         }
+
+        [TestMethod]
+        public void ProcessGetRequestWebExceptionTest()
+        {
+            ProcessGetRequestWebExceptionTestAsync().Wait();
+        }
+
+        private async Task ProcessGetRequestWebExceptionTestAsync()
+        {
+            var exceptionObject = new ExceptionObject()
+            {
+                Description = "This is a test Exception Description",
+                Message = "This is a test Exception Message",
+                Type = EType.WrongHeaders
+            };
+
+            using (ShimsContext.Create())
+            {
+
+                ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken = (client, message, arg3) =>
+                {
+                    return Task.FromResult(new HttpResponseMessage()
+                    {
+                        Content = new StringContent(JsonConvert.SerializeObject(exceptionObject)),
+                        StatusCode = HttpStatusCode.BadRequest
+                    });
+                };
+
+                try
+                {
+                    var result = await UncommonRequestHelper.ProcessGetRequestAsync<Person>("http://www.xciles.com/");
+                    Assert.Fail("Should not be able to be here...");
+                }
+                catch (UncommonRequestException ex)
+                {
+                    Assert.IsTrue(ex.RequestExceptionStatus == EUncommonRequestExceptionStatus.ServiceError);
+                    Assert.IsTrue(ex.ServiceExceptionResult.Message != String.Empty);
+                    Assert.IsTrue(ex.StatusCode == HttpStatusCode.BadRequest);
+
+                }
+
+                
+            }
+        }
     }
 }
