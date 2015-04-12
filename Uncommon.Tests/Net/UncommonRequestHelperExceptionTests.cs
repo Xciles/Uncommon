@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.Fakes;
 using System.Net.Http;
 using System.Net.Http.Fakes;
 using System.Threading.Tasks;
@@ -91,7 +92,13 @@ namespace Xciles.Uncommon.Tests.Net
 
                 ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken = (client, message, arg3) =>
                 {
+                    //var webEx = new WebException("", WebExceptionStatus.UnknownError, )
                     throw new HttpRequestException();
+                };
+
+                ShimHttpWebResponse.AllInstances.ResponseStreamGet = (response) =>
+                {
+                    return ShimsContext.ExecuteWithoutShims(() => response.GetResponseStream());
                 };
 
                 try
