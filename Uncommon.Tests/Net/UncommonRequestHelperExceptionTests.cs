@@ -68,5 +68,50 @@ namespace Xciles.Uncommon.Tests.Net
                 }
             }
         }
+
+
+
+        [TestMethod]
+        public void ProcessGetRequestHttpRequestExceptionTest()
+        {
+            ProcessGetRequestHttpRequestExceptionTestAsync().Wait();
+        }
+
+        private async Task ProcessGetRequestHttpRequestExceptionTestAsync()
+        {
+            var exceptionObject = new ExceptionObject()
+            {
+                Description = "This is a test Exception Description",
+                Message = "This is a test Exception Message",
+                Type = EType.WrongHeaders
+            };
+
+            using (ShimsContext.Create())
+            {
+
+                ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken = (client, message, arg3) =>
+                {
+                    throw new HttpRequestException();
+                };
+
+                try
+                {
+                    var result = await UncommonRequestHelper.ProcessGetRequestAsync<Person>("http://www.xciles.com/");
+                    Assert.Fail("Should not be able to be here...");
+                }
+                catch (UncommonRequestException ex)
+                {
+                    Assert.IsTrue(ex.RequestExceptionStatus == EUncommonRequestExceptionStatus.ServiceError);
+                    Assert.IsTrue(ex.ServiceExceptionResult == null);
+                    Assert.IsTrue(ex.StatusCode == HttpStatusCode.BadRequest);
+
+                    var responseResult = ex.ConvertExceptionResponseToObject<ExceptionObject>();
+                    Assert.IsTrue(responseResult != null);
+                    Assert.IsTrue(responseResult.Description == exceptionObject.Description);
+                    Assert.IsTrue(responseResult.Message == exceptionObject.Message);
+                    Assert.IsTrue(responseResult.Type == exceptionObject.Type);
+                }
+            }
+        }
     }
 }
