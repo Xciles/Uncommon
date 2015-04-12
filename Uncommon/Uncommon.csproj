@@ -44,6 +44,7 @@
     <Compile Include="Net\EUncommonResponseSerializer.cs" />
     <Compile Include="Net\EUncommonRequestMethod.cs" />
     <Compile Include="Net\EUncommonRequestExceptionStatus.cs" />
+    <Compile Include="Net\UncommonHttpHeaders.cs" />
     <Compile Include="Net\UncommonResponse.cs" />
     <Compile Include="Net\UncommonRequestOptions.cs" />
     <Compile Include="Net\ServiceExceptionResult.cs" />

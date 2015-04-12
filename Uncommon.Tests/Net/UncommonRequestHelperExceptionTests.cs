@@ -105,11 +105,11 @@ namespace Xciles.Uncommon.Tests.Net
                     Assert.IsTrue(ex.ServiceExceptionResult == null);
                     Assert.IsTrue(ex.StatusCode == HttpStatusCode.BadRequest);
 
-                    var responseResult = ex.ConvertExceptionResponseToObject<ExceptionObject>();
-                    Assert.IsTrue(responseResult != null);
-                    Assert.IsTrue(responseResult.Description == exceptionObject.Description);
-                    Assert.IsTrue(responseResult.Message == exceptionObject.Message);
-                    Assert.IsTrue(responseResult.Type == exceptionObject.Type);
+                    //var responseResult = ex.ConvertExceptionResponseToObject<ExceptionObject>();
+                    //Assert.IsTrue(responseResult != null);
+                    //Assert.IsTrue(responseResult.Description == exceptionObject.Description);
+                    //Assert.IsTrue(responseResult.Message == exceptionObject.Message);
+                    //Assert.IsTrue(responseResult.Type == exceptionObject.Type);
                 }
             }
         }
