@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -17,11 +16,10 @@ namespace Xciles.Uncommon.Net
     public class NoResponseContent { }
 
     // todo change to correct cancellationtoken
-    // Todo change methods so that the existing contract does not break
     public class UncommonRequestHelper
     {
         public static ISecurityContext SecurityContext { get; set; }
-        protected static JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
+        protected static JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
 
         public static async Task<UncommonResponse<TResponseType>> ProcessGetRequestAsync<TResponseType>(string requestUri, UncommonRequestOptions options = null)
         {
@@ -38,7 +36,6 @@ namespace Xciles.Uncommon.Net
             var result = await ProcessRequest<NoRequestContent, byte[]>(EUncommonRequestMethod.GET, requestUri, null, options).ConfigureAwait(false);
             result.Result = result.RawResponseContent;
             result.RawResponseContent = null;
-            // will this work??
 
             return result;
         }
@@ -96,11 +93,6 @@ namespace Xciles.Uncommon.Net
             {
                 options = SetRestRequestOptions(options);
 
-                //var client = new HttpClient(new ClientCompressionHandler(new HttpClientHandler(), new GZipCompressor(), new DeflateCompressor()));
-
-                //client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-                //client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
-
                 using (var client = new UncommonHttpClient())
                 {
                     client.Timeout = new TimeSpan(0, 0, 0, 0, options.Timeout);
@@ -110,27 +102,27 @@ namespace Xciles.Uncommon.Net
                     {
                         httpContent = await GenerateRequestContent(requestContent, options).ConfigureAwait(false);
                     }
+                    
                     var request = CreateRequestMessage(method, requestUri, httpContent, options);
-
                     response = await client.SendAsync(request, CancellationToken.None).ConfigureAwait(false);
+                    
                     if (response.IsSuccessStatusCode)
                     {
                         return await ProcessReponseContent<TResponseType>(response, options).ConfigureAwait(false);
                     }
-                    else
-                    {
-                        var requestException = new UncommonRequestException()
-                        {
-                            Information = "RequestException",
-                            StatusCode = response.StatusCode,
-                            WebExceptionStatus = WebExceptionStatus.UnknownError,
-                            RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError
-                        };
-                        var resultAsString = response.Content.ReadAsStringAsync().Result;
-                        requestException.ExceptionResponseAsString = resultAsString;
 
-                        throw requestException;
-                    }
+                    var requestException = new UncommonRequestException
+                    {
+                        Information = "RequestException",
+                        RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError,
+                        StatusCode = response.StatusCode,
+                        WebExceptionStatus = WebExceptionStatus.UnknownError
+                    };
+
+                    var resultAsString = response.Content.ReadAsStringAsync().Result;
+                    requestException.ExceptionResponseAsString = resultAsString;
+
+                    throw requestException;
                 }
             }
             catch (UncommonRequestException)
@@ -142,10 +134,10 @@ namespace Xciles.Uncommon.Net
                 throw new UncommonRequestException
                 {
                     Information = "JsonSerializationException",
-                    StatusCode = HttpStatusCode.OK,
-                    WebExceptionStatus = WebExceptionStatus.UnknownError,
                     InnerException = ex,
-                    RequestExceptionStatus = EUncommonRequestExceptionStatus.SerializationError
+                    RequestExceptionStatus = EUncommonRequestExceptionStatus.SerializationError,
+                    StatusCode = HttpStatusCode.OK,
+                    WebExceptionStatus = WebExceptionStatus.UnknownError
                 };
             }
             catch (HttpRequestException ex)
@@ -156,34 +148,35 @@ namespace Xciles.Uncommon.Net
                     throw HandleWebException(exception);
                 }
 
-                var requestException = new UncommonRequestException()
+                var requestException = new UncommonRequestException
                 {
-                    InnerException = ex,
                     Information = "HttpRequestException",
+                    InnerException = ex,
+                    RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError,
                     StatusCode = response != null ? response.StatusCode : HttpStatusCode.BadRequest,
-                    WebExceptionStatus = WebExceptionStatus.UnknownError,
-                    RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError
+                    WebExceptionStatus = WebExceptionStatus.UnknownError
                 };
 
                 throw requestException;
             }
             catch (TaskCanceledException ex)
             {
-                // mostlikely an timeout
+                // most likely a timeout
                 throw new UncommonRequestException
                 {
-                    RequestExceptionStatus = EUncommonRequestExceptionStatus.Timeout,
-                    InnerException = ex
+                    Information = "TaskCanceledException",
+                    InnerException = ex,
+                    RequestExceptionStatus = EUncommonRequestExceptionStatus.Timeout
                 };
             }
             catch (Exception ex)
             {
                 throw new UncommonRequestException
                 {
-                    RequestExceptionStatus = EUncommonRequestExceptionStatus.Undefined,
                     Information = ex.Message,
-                    StatusCode = HttpStatusCode.NotFound,
-                    InnerException = ex
+                    InnerException = ex,
+                    RequestExceptionStatus = EUncommonRequestExceptionStatus.Undefined,
+                    StatusCode = HttpStatusCode.NotFound
                 };
             }
         }
@@ -199,7 +192,7 @@ namespace Xciles.Uncommon.Net
                 case "RequestCanceled":
                     {
                         // Request is cancelled because of timeout.
-                        return new UncommonRequestException()
+                        return new UncommonRequestException
                         {
                             RequestExceptionStatus = EUncommonRequestExceptionStatus.Timeout
                         };
@@ -283,18 +276,12 @@ namespace Xciles.Uncommon.Net
                 request.Headers.Add("Authorization", options.SecurityContext.GenerateAuthorizationHeader());
             }
 
-            // Add cookie things...
-            //if (Options.CookieContainer != null)
-            //{
-            //    _request.CookieContainer = Options.CookieContainer;
-            //}
-
             return request;
         }
 
         private static async Task<HttpContent> GenerateRequestContent<TRequestType>(TRequestType requestContent, UncommonRequestOptions options)
         {
-            HttpContent httpContent = null;
+            HttpContent httpContent;
 
             switch (options.RequestSerializer)
             {
@@ -384,29 +371,6 @@ namespace Xciles.Uncommon.Net
             }
 
             return restResponse;
-
-            //CookieContainer cookies = null;
-            //if (response.Cookies != null && response.Cookies.Count > 0)
-            //{
-            //    cookies = new CookieContainer();
-            //    foreach (Cookie c in response.Cookies)
-            //    {
-            //        if (c.Domain[0] == '.' && c.Domain.Substring(1) == response.ResponseUri.Host)
-            //        {
-            //            c.Domain = c.Domain.TrimStart(new[] { '.' });
-            //        }
-            //        cookies.Add(new Uri(response.ResponseUri.Scheme + "://" + response.ResponseUri.Host), c);
-            //    }
-            //}
-
-            //restResponse.CookieContainer = cookies;
-            //restResponse.StatusCode = response.StatusCode;
-
-
-            //var restResponse = new RestResponse<NoResponseContent>
-            //{
-            //    StatusCode = response.StatusCode
-            //};
         }
 
         private static void SetHttpAcceptHeader(HttpRequestMessage request, EUncommonResponseSerializer responseSerializer)

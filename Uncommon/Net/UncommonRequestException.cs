@@ -9,7 +9,7 @@ namespace Xciles.Uncommon.Net
         public EUncommonRequestExceptionStatus RequestExceptionStatus { get; set; }
         [Obsolete ("What was in here has been moved to innerexception")]
         public Exception Exception { get; set; }
-        [Obsolete("This is no longer being used. Please use ConvertExceptionResponseToObject<T> for parsing to a <T> of your choise.")]
+        [Obsolete("This is no longer being used. Please use ConvertExceptionResponseToObject<T> for parsing to a <T> of your choice.")]
         public ServiceExceptionResult ServiceExceptionResult { get; set; }
         public string Information { get; set; }
         public WebExceptionStatus WebExceptionStatus { get; set; }
@@ -20,7 +20,7 @@ namespace Xciles.Uncommon.Net
 
         public T ConvertExceptionResponseToObject<T>()
         {
-            var jsonSerializerSettings = new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
+            var jsonSerializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
 
             return JsonConvert.DeserializeObject<T>(ExceptionResponseAsString, jsonSerializerSettings);
         }
