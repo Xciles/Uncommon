@@ -181,7 +181,7 @@ namespace Xciles.Uncommon.Net
                 throw new UncommonRequestException
                 {
                     RequestExceptionStatus = EUncommonRequestExceptionStatus.Undefined,
-                    Information = "TheStrangeMonoNullException",
+                    Information = ex.Message,
                     StatusCode = HttpStatusCode.NotFound,
                     InnerException = ex
                 };
