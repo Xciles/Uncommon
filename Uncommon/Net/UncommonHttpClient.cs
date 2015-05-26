@@ -10,7 +10,7 @@ namespace Xciles.Uncommon.Net
 {
     public class UncommonHttpClient : HttpClient
     {
-        protected JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
+        protected JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
 
         public UncommonHttpClient()
             : base(new UncommonHttpClientHandler())
