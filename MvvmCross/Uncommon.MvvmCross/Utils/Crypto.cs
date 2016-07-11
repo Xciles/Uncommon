@@ -14,7 +14,7 @@ namespace Xciles.Uncommon.MvvmCross.Utils
         /// </summary>    
         /// <param name="lengthInBytes">No. of bytes</param>    
         /// <returns></returns>    
-        public static byte[] CreateSalt(uint lengthInBytes)
+        public static byte[] CreateSalt(int lengthInBytes)
         {
             return WinRTCrypto.CryptographicBuffer.GenerateRandom(lengthInBytes);
         }

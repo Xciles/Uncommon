@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Cirrious.CrossCore.Platform;
-using Cirrious.MvvmCross.Plugins.File;
+using MvvmCross.Platform;
+using MvvmCross.Platform.Platform;
+using MvvmCross.Plugins.File;
 
 namespace Xciles.Uncommon.MvvmCross.Services
 {
@@ -12,8 +13,8 @@ namespace Xciles.Uncommon.MvvmCross.Services
 
         static StorageService()
         {
-            FileStore = Cirrious.CrossCore.Mvx.Resolve<IMvxFileStore>();
-            FileStoreAsync = Cirrious.CrossCore.Mvx.Resolve<IMvxFileStoreAsync>();
+            FileStore = Mvx.Resolve<IMvxFileStore>();
+            FileStoreAsync = Mvx.Resolve<IMvxFileStoreAsync>();
         }
 
         public static async Task<string> StoreFileAsync(string folder, string fileFullName, string fileAsString)
@@ -50,7 +51,7 @@ namespace Xciles.Uncommon.MvvmCross.Services
 
         public static void DeleteFile(string folder, string fileFullName)
         {
-            var filestore = Cirrious.CrossCore.Mvx.Resolve<IMvxFileStore>();
+            var filestore = Mvx.Resolve<IMvxFileStore>();
 
             try
             {
@@ -58,7 +59,7 @@ namespace Xciles.Uncommon.MvvmCross.Services
             }
             catch (Exception ex)
             {
-                Cirrious.CrossCore.Mvx.Resolve<IMvxTrace>().Trace(MvxTraceLevel.Error, "StorageService.DeleteFile", ex.Message + " - " + ex.StackTrace);
+                Mvx.Resolve<IMvxTrace>().Trace(MvxTraceLevel.Error, "StorageService.DeleteFile", ex.Message + " - " + ex.StackTrace);
             }
         }
 
@@ -70,7 +71,7 @@ namespace Xciles.Uncommon.MvvmCross.Services
             }
             catch (Exception ex)
             {
-                Cirrious.CrossCore.Mvx.Resolve<IMvxTrace>().Trace(MvxTraceLevel.Error, "StorageService.FileChecks", ex.Message + " - " + ex.StackTrace);
+                Mvx.Resolve<IMvxTrace>().Trace(MvxTraceLevel.Error, "StorageService.FileChecks", ex.Message + " - " + ex.StackTrace);
             }
 
             var fullPath = FileStore.PathCombine(folder, fileFullName);

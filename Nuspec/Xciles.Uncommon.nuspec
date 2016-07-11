@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
 	<metadata>
 		<id>Xciles.Uncommon</id>
-		<version>1.4.0</version>
+		<version>1.4.1-beta</version>
 		<title>Xciles.Uncommon</title>
 		<authors>Hans Harts</authors>
 		<owners>Hans Harts</owners>
@@ -15,9 +15,11 @@
 			<dependency id="Microsoft.Bcl" version="1.1.10" />
 			<dependency id="Microsoft.Bcl.Build" version="1.0.21" />
 			<dependency id="Microsoft.Net.Http" version="2.2.29" />
-			<dependency id="Newtonsoft.Json" version="6.0.8" />
+			<dependency id="Newtonsoft.Json" version="8.0.3" />
 		</dependencies>
 		<releaseNotes>
+1.4.1-beta
+Bumping to latest version of packages
 1.4
 2 fixes for UncommonRequestHelper (see github)
 Few tiny changes
@@ -38,8 +40,8 @@ Should add notes ;)
 	<files>	
   
 		<!-- PCL -->
-		<file src="..\bin\Release\Uncommon\Portable\Xciles.Uncommon.dll" target="lib\portable-win+net45+wp8+win8+wpa81\Xciles.Uncommon.dll" />
-		<file src="..\bin\Release\Uncommon\Portable\Xciles.Uncommon.pdb" target="lib\portable-win+net45+wp8+win8+wpa81\Xciles.Uncommon.pdb" />
+		<file src="..\bin\Debug\Uncommon\Portable\Xciles.Uncommon.dll" target="lib\portable-win+net45+wp8+win8+wpa81\Xciles.Uncommon.dll" />
+		<file src="..\bin\Debug\Uncommon\Portable\Xciles.Uncommon.pdb" target="lib\portable-win+net45+wp8+win8+wpa81\Xciles.Uncommon.pdb" />
 
 	</files>
 </package>
