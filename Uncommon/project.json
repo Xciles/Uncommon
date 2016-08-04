@@ -1,13 +1,54 @@
-﻿{
-  "supports": {},
-  "dependencies": {
-    "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
-    "NETStandard.Library": "1.6.0",
-    "Newtonsoft.Json": "9.0.1",
-    "System.Net.Http": "4.1.0",
-    "System.Xml.XmlSerializer": "4.0.11"
-  },
-  "frameworks": {
-    "netstandard1.1": {}
-  }
+{
+    "version": "1.9.1-*",
+    "title": "Xciles.Uncommon",
+    "description": "A common library for PCL containing usefull 'helpers'.",
+    "language": "en-US",
+    "authors": [ "Hans Harts" ],
+    "packOptions": {
+        "projectUrl": "https://github.com/xciles/uncommon",
+        "tags": [ "json" ],
+        "licenseUrl": "http://opensource.org/licenses/MIT"
+    },
+    "frameworks": {
+        "netstandard1.1": {
+            "imports": "dnxcore50",
+            "buildOptions": {
+                "define": [ "_NETCORE_" ],
+                "outputName": "Xciles.Uncommon"
+            },
+            "dependencies": {
+                "NETStandard.Library": "1.6.0",
+                "Newtonsoft.Json": "9.0.1",
+                "System.Xml.XmlSerializer": "4.0.11"
+            }
+        },
+        ".NETPortable,Version=v4.5,Profile=Profile111": {
+            "buildOptions": {
+                "define": [ "_NETPORTABLE_" ],
+                "outputName": "Xciles.Uncommon"
+            },
+            "dependencies": {
+                "Newtonsoft.Json": "9.0.1"
+            },
+            "frameworkAssemblies": {
+                "Microsoft.CSharp": "4.0.0.0",
+                "System.Collections": "4.0.0.0",
+                "System.Linq": "4.0.0.0",
+                "System.Net.Http": "4.0.0.0",
+                "System.Net": "4.0.0.0",
+                "System.Net.Primitives": "4.0.0.0",
+                "System.Runtime": "4.0.0.0",
+                "System.Threading": "4.0.0.0",
+                "System.Threading.Tasks": "4.0.0.0",
+                "System.Resources.ResourceManager": "4.0.0.0",
+                "System": "4.0.0.0",
+                "System.Xml": "4.0.0.0",
+                "System.Xml.XmlSerializer": "4.0.0.0",
+                "System.Xml.Linq": "4.0.0.0",
+                "System.Runtime.Serialization": "4.0.0.0",
+                "System.Reflection": "4.0.0.0"
+
+            }
+        }
+    }
 }

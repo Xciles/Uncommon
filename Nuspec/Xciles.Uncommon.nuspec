@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
 	<metadata>
 		<id>Xciles.Uncommon</id>
-		<version>1.9-beta</version>
+		<version>1.9.1-beta</version>
 		<title>Xciles.Uncommon</title>
 		<authors>Hans Harts</authors>
 		<owners>Hans Harts</owners>
@@ -12,7 +12,9 @@
 		<description>A common library for PCL containing useful 'helpers'.</description>
 		<tags>uncommon xamarin</tags>
 		<releaseNotes>
-1.9
+1.9.1-beta
+Adding back a PCL profile but moving to Profile111
+1.9-beta
 Beta release
 Moving project to netstandard1.1
 Changes to some api calls
@@ -37,20 +39,25 @@ Removed Microsoft.Threading.Tasks, don't know why this was still included...
 Should add notes ;)
         </releaseNotes>
 		<dependencies>
+		  <group targetFramework=".NETPortable4.5-Profile111" >
+			<dependency id="Newtonsoft.Json" version="9.0.1" />
+		  </group>
 		  <group targetFramework=".NETStandard1.1">
-			<dependency id="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
 			<dependency id="NETStandard.Library" version="1.6.0" />
 			<dependency id="Newtonsoft.Json" version="9.0.1" />
-			<dependency id="System.Net.Http" version="4.1.0" />
 			<dependency id="System.Xml.XmlSerializer" version="4.0.11" />
 		  </group>
 		</dependencies>
 	</metadata>
 	<files>	
   
-		<!-- PCL -->
-		<file src="..\bin\Debug\Uncommon\Portable\Xciles.Uncommon.dll" target="lib\netstandard1.1\Xciles.Uncommon.dll" />
-		<file src="..\bin\Debug\Uncommon\Portable\Xciles.Uncommon.pdb" target="lib\netstandard1.1\Xciles.Uncommon.pdb" />
+		<!-- Netstandard -->
+		<file src="..\Uncommon\bin\Debug\netstandard1.1\Xciles.Uncommon.dll" target="lib\netstandard1.1\Xciles.Uncommon.dll" />
+		<file src="..\Uncommon\bin\Debug\netstandard1.1\Xciles.Uncommon.pdb" target="lib\netstandard1.1\Xciles.Uncommon.pdb" />
+  
+		<!-- PCL111 -->
+		<file src="..\Uncommon\bin\Debug\portable45-net45+win8+wpa81\Xciles.Uncommon.dll" target="lib\portable45-net45+win8+wpa81\Xciles.Uncommon.dll" />
+		<file src="..\Uncommon\bin\Debug\portable45-net45+win8+wpa81\Xciles.Uncommon.pdb" target="lib\portable45-net45+win8+wpa81\Xciles.Uncommon.pdb" />
 
 	</files>
 </package>
