@@ -3,7 +3,6 @@
     public enum EUncommonResponseSerializer
     {
         Undefined,
-        UseXmlDataContractSerializer,
         UseXmlSerializer,
         UseJsonNet,
         UseByteArray

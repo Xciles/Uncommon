@@ -3,7 +3,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -116,7 +115,6 @@ namespace Xciles.Uncommon.Net
                         Information = "RequestException",
                         RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError,
                         StatusCode = response.StatusCode,
-                        WebExceptionStatus = WebExceptionStatus.UnknownError
                     };
 
                     var resultAsString = response.Content.ReadAsStringAsync().Result;
@@ -136,25 +134,17 @@ namespace Xciles.Uncommon.Net
                     Information = "JsonSerializationException",
                     InnerException = ex,
                     RequestExceptionStatus = EUncommonRequestExceptionStatus.SerializationError,
-                    StatusCode = HttpStatusCode.OK,
-                    WebExceptionStatus = WebExceptionStatus.UnknownError
+                    StatusCode = HttpStatusCode.OK
                 };
             }
             catch (HttpRequestException ex)
             {
-                var exception = ex.InnerException as WebException;
-                if (exception != null)
-                {
-                    throw HandleWebException(exception);
-                }
-
                 var requestException = new UncommonRequestException
                 {
                     Information = "HttpRequestException",
-                    InnerException = ex,
+                    InnerException = ex.InnerException ?? ex,
                     RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError,
-                    StatusCode = response != null ? response.StatusCode : HttpStatusCode.BadRequest,
-                    WebExceptionStatus = WebExceptionStatus.UnknownError
+                    StatusCode = response != null ? response.StatusCode : HttpStatusCode.BadRequest
                 };
 
                 throw requestException;
@@ -178,79 +168,6 @@ namespace Xciles.Uncommon.Net
                     RequestExceptionStatus = EUncommonRequestExceptionStatus.Undefined,
                     StatusCode = HttpStatusCode.NotFound
                 };
-            }
-        }
-
-        private static UncommonRequestException HandleWebException(WebException webException)
-        {
-            // WebExceptionStatus does (or did) not contain all posible statusses returned by the webRequest on certain platforms (Xamarin based).
-            // Therefor we have to check by string...............................................
-            // ¯\(°_o)/¯
-
-            switch (webException.Status.ToString("G"))
-            {
-                case "RequestCanceled":
-                    {
-                        // Request is cancelled because of timeout.
-                        return new UncommonRequestException
-                        {
-                            RequestExceptionStatus = EUncommonRequestExceptionStatus.Timeout
-                        };
-                    }
-                case "ConnectFailure":
-                case "NameResolutionFailure":
-                    {
-                        return new UncommonRequestException
-                        {
-                            RequestExceptionStatus = EUncommonRequestExceptionStatus.NoConnection
-                        };
-                    }
-                case "SendFailure":
-                    {
-                        return new UncommonRequestException
-                        {
-                            RequestExceptionStatus = EUncommonRequestExceptionStatus.Failed
-                        };
-                    }
-                default:
-                    var requestException = new UncommonRequestException();
-                    if (webException.Response != null)
-                    {
-                        var response = (HttpWebResponse)webException.Response; // Is this stil needed? Since this will no longer happen unless something really bad happend.
-                        using (var responseStream = response.GetResponseStream())
-                        {
-                            // Moved objectAsString outside of try because of NotSupportedException occurs when reading the stream twice. (Seek to begin throws)
-                            // This also only happens on Xamarin based platforms
-                            string objectAsString = String.Empty;
-                            try
-                            {
-                                using (var reader = new StreamReader(responseStream))
-                                {
-                                    requestException.ExceptionResponseAsString = reader.ReadToEnd();
-                                    requestException.RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError;
-                                }
-                            }
-                            catch (JsonSerializationException ex)
-                            {
-                                requestException.Information = objectAsString;
-                                requestException.InnerException = ex;
-                                requestException.RequestExceptionStatus = EUncommonRequestExceptionStatus.SerializationError;
-                            }
-                            finally
-                            {
-                                requestException.RequestExceptionStatus = EUncommonRequestExceptionStatus.ServiceError;
-                            }
-                        }
-                        requestException.StatusCode = response.StatusCode;
-                    }
-                    else
-                    {
-                        requestException.RequestExceptionStatus = EUncommonRequestExceptionStatus.UnknownError;
-                    }
-
-                    requestException.WebExceptionStatus = webException.Status;
-
-                    return requestException;
             }
         }
 
@@ -285,14 +202,6 @@ namespace Xciles.Uncommon.Net
 
             switch (options.RequestSerializer)
             {
-                case EUncommonRequestSerializer.UseXmlDataContractSerializer:
-                    {
-                        var requestBody = await ConvertModelObjectByXmlDataContactToString(requestContent).ConfigureAwait(false);
-
-                        httpContent = new StringContent(requestBody);
-                        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/xml");
-                    }
-                    break;
                 case EUncommonRequestSerializer.UseXmlSerializer:
                     {
                         var requestBody = await ConvertModelObjectByXmlToString(requestContent).ConfigureAwait(false);
@@ -339,12 +248,6 @@ namespace Xciles.Uncommon.Net
             {
                 switch (options.ResponseSerializer)
                 {
-                    case EUncommonResponseSerializer.UseXmlDataContractSerializer:
-                        {
-                            var resultAsStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                            restResponse.Result = ConvertResponseToModelObjectFromDataContractXml<TResponseType>(resultAsStream);
-                        }
-                        break;
                     case EUncommonResponseSerializer.UseXmlSerializer:
                         {
                             var resultAsStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
@@ -378,7 +281,6 @@ namespace Xciles.Uncommon.Net
             string acceptHeader;
             switch (responseSerializer)
             {
-                case EUncommonResponseSerializer.UseXmlDataContractSerializer:
                 case EUncommonResponseSerializer.UseXmlSerializer:
                     acceptHeader = "application/xml";
                     break;
@@ -408,18 +310,6 @@ namespace Xciles.Uncommon.Net
             return options;
         }
 
-        private static async Task<string> ConvertModelObjectByXmlDataContactToString<TRequestType>(TRequestType modelObject)
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                var serializer = new DataContractSerializer(typeof(TRequestType));
-                serializer.WriteObject(memoryStream, modelObject);
-
-                memoryStream.Position = 0;
-                return await new StreamReader(memoryStream).ReadToEndAsync().ConfigureAwait(false);
-            } 
-        }
-
         private static async Task<string> ConvertModelObjectByXmlToString<TRequestType>(TRequestType modelObject)
         {
             using (var memoryStream = new MemoryStream())
@@ -430,14 +320,6 @@ namespace Xciles.Uncommon.Net
                 memoryStream.Position = 0;
                 return await new StreamReader(memoryStream).ReadToEndAsync().ConfigureAwait(false);
             }
-        }
-
-        private static TResponseType ConvertResponseToModelObjectFromDataContractXml<TResponseType>(Stream resultAsStream)
-        {
-            var serializer = new DataContractSerializer(typeof(TResponseType));
-            var result = (TResponseType)serializer.ReadObject(resultAsStream);
-
-            return result;
         }
 
         private static TResponseType ConvertResponseToModelObjectFromXml<TResponseType>(Stream resultAsStream)

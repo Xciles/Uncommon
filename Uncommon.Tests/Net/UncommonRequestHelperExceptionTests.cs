@@ -58,7 +58,6 @@ namespace Xciles.Uncommon.Tests.Net
                 catch (UncommonRequestException ex)
                 {
                     Assert.IsTrue(ex.RequestExceptionStatus == EUncommonRequestExceptionStatus.ServiceError);
-                    Assert.IsTrue(ex.ServiceExceptionResult == null);
                     Assert.IsTrue(ex.StatusCode == HttpStatusCode.BadRequest);
 
                     var responseResult = ex.ConvertExceptionResponseToObject<ExceptionObject>();
@@ -109,7 +108,6 @@ namespace Xciles.Uncommon.Tests.Net
                 catch (UncommonRequestException ex)
                 {
                     Assert.IsTrue(ex.RequestExceptionStatus == EUncommonRequestExceptionStatus.ServiceError);
-                    Assert.IsTrue(ex.ServiceExceptionResult == null);
                     Assert.IsTrue(ex.StatusCode == HttpStatusCode.BadRequest);
 
                     //var responseResult = ex.ConvertExceptionResponseToObject<ExceptionObject>();
