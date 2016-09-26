@@ -11,7 +11,7 @@ namespace Xciles.Uncommon.Net
         public HttpStatusCode StatusCode { get; set; }
 
         public new Exception InnerException { get; set; }
-        internal string ExceptionResponseAsString { get; set; }
+        public string ExceptionResponseAsString { get; set; }
 
         public T ConvertExceptionResponseToObject<T>()
         {
