@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
 	<metadata>
 		<id>Xciles.Uncommon.MvvmCross</id>
-		<version>1.4-beta</version>
+		<version>1.4.1-beta</version>
 		<title>Xciles.Uncommon.MvvmCross</title>
 		<authors>Hans Harts</authors>
 		<owners>Hans Harts</owners>
@@ -12,16 +12,19 @@
 		<description>A common library for PCL containing useful 'helpers' for MvvmCross.</description>
 		<tags>uncommon xamarin</tags>
 		<dependencies>
-			<dependency id="MvvmCross" version="4.2.2" />
-			<dependency id="MvvmCross.Binding" version="4.2.2" />
-			<dependency id="MvvmCross.Core" version="4.2.2" />
-			<dependency id="MvvmCross.Platform" version="4.2.2" />
-			<dependency id="MvvmCross.Plugin.File" version="4.2.2" />
+			<dependency id="MvvmCross" version="4.3.0" />
+			<dependency id="MvvmCross.Binding" version="4.3.0" />
+			<dependency id="MvvmCross.Core" version="4.3.0" />
+			<dependency id="MvvmCross.Platform" version="4.3.0" />
+			<dependency id="MvvmCross.Plugin.File" version="4.3.0" />
 			<dependency id="Newtonsoft.Json" version="9.0.1" />
 			<dependency id="PCLCrypto" version="2.0.147" />
-			<dependency id="Validation" version="2.2.8" />
+			<dependency id="Validation" version="2.3.7" />
 		</dependencies>
 		<releaseNotes>
+1.4.1-beta
+Beta version for latest binaries!
+And updated to profile111
 1.4-beta
 Beta version for latest binaries!
 1.3
