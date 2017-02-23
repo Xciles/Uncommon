@@ -4,7 +4,11 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+#if _NETCORE_
 using Xciles.Uncommon.Handler;
+#else
+using ModernHttpClient;
+#endif
 
 namespace Xciles.Uncommon.Net
 {
@@ -12,8 +16,11 @@ namespace Xciles.Uncommon.Net
     {
         protected JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
 
-        public UncommonHttpClient()
-            : base(new UncommonHttpClientHandler())
+#if _NETCORE_
+        public UncommonHttpClient() : base(new UncommonHttpClientHandler())
+#else
+        public UncommonHttpClient() : base(new NativeMessageHandler())
+#endif
         {
         }
 
@@ -124,7 +131,7 @@ namespace Xciles.Uncommon.Net
             return await PatchAsync(requestUri, httpContent, cancellationToken).ConfigureAwait(false);
         }
 
-        #region Patch support
+#region Patch support
 
         public async Task<HttpResponseMessage> PatchAsync(string requestUri, HttpContent content)
         {
@@ -174,6 +181,6 @@ namespace Xciles.Uncommon.Net
             return await SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
-        #endregion
+#endregion
     }
 }
