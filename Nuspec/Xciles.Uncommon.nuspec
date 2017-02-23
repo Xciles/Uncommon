@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
 	<metadata>
 		<id>Xciles.Uncommon</id>
-		<version>1.9.2-beta</version>
+		<version>1.9.3-beta</version>
 		<title>Xciles.Uncommon</title>
 		<authors>Hans Harts</authors>
 		<owners>Hans Harts</owners>
@@ -12,6 +12,9 @@
 		<description>A common library for PCL containing useful 'helpers'.</description>
 		<tags>uncommon xamarin</tags>
 		<releaseNotes>
+1.9.3-beta
+Adding modernhttpclient for PCL projects
+Updating packages!
 1.9.2-beta
 Exposing ExceptionResponseAsString
 1.9.1-beta
@@ -43,11 +46,12 @@ Should add notes ;)
 		<dependencies>
 		  <group targetFramework=".NETPortable4.5-Profile111" >
 			<dependency id="Newtonsoft.Json" version="9.0.1" />
+			<dependency id="modernhttpclient" version="2.4.2" />
 		  </group>
 		  <group targetFramework=".NETStandard1.1">
-			<dependency id="NETStandard.Library" version="1.6.0" />
+			<dependency id="NETStandard.Library" version="1.6.1" />
 			<dependency id="Newtonsoft.Json" version="9.0.1" />
-			<dependency id="System.Xml.XmlSerializer" version="4.0.11" />
+			<dependency id="System.Xml.XmlSerializer" version="4.3.0" />
 		  </group>
 		</dependencies>
 	</metadata>
