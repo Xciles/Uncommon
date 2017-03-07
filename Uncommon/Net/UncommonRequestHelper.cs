@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -7,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using Xciles.Uncommon.Extensions;
 using Xciles.Uncommon.Security;
 
 namespace Xciles.Uncommon.Net
@@ -97,14 +100,14 @@ namespace Xciles.Uncommon.Net
                     client.Timeout = new TimeSpan(0, 0, 0, 0, options.Timeout);
 
                     HttpContent httpContent = null;
-                    if (typeof (TRequestType) != typeof (NoRequestContent))
+                    if (typeof(TRequestType) != typeof(NoRequestContent))
                     {
                         httpContent = await GenerateRequestContent(requestContent, options).ConfigureAwait(false);
                     }
-                    
+
                     var request = CreateRequestMessage(method, requestUri, httpContent, options);
                     response = await client.SendAsync(request, CancellationToken.None).ConfigureAwait(false);
-                    
+
                     if (response.IsSuccessStatusCode)
                     {
                         return await ProcessReponseContent<TResponseType>(response, options).ConfigureAwait(false);
@@ -223,10 +226,13 @@ namespace Xciles.Uncommon.Net
                         httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                     }
                     break;
-                case EUncommonRequestSerializer.UseStringUrlPost:
+                case EUncommonRequestSerializer.UseFormUrlEncoded:
                     {
-                        httpContent = new StringContent(requestContent.ToString());
-                        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+                        var pairs = requestContent as IEnumerable<KeyValuePair<string, string>>;
+
+                        var content = pairs ?? requestContent.GetProperties().AsEnumerable();
+
+                        httpContent = new FormUrlEncodedContent(content);
                     }
                     break;
                 default:
