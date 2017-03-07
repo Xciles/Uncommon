@@ -82,7 +82,7 @@
     <Compile Include="ProtectedStore.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Uncommon.MvvmCross.Plugins.ProtectedStore\Uncommon.MvvmCross.Plugins.ProtectedStore.csproj">
+    <ProjectReference Include="..\ProtectedStore\Uncommon.MvvmCross.Plugins.ProtectedStore.csproj">
       <Project>{3e9e5523-71f9-4b9a-9cc2-e3db8ab5355c}</Project>
       <Name>Uncommon.MvvmCross.Plugins.ProtectedStore</Name>
     </ProjectReference>

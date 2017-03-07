@@ -1,16 +1,15 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Resources;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone")]
+[assembly: AssemblyTitle("Uncommon.MvvmCross.Plugins.ProtectedStore.Touch")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Uncommon.MvvmCross.Plugins.ProtectedStore.WindowsPhone")]
+[assembly: AssemblyProduct("Uncommon.MvvmCross.Plugins.ProtectedStore.Touch")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -21,7 +20,7 @@ using System.Resources;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("9e1e2ca6-db24-4814-a9d1-05b6b6b3101b")]
+[assembly: Guid("ebb356bc-c339-42c7-b42c-3bb8f43b3b72")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -30,7 +29,7 @@ using System.Resources;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Revision and Build Numbers 
+// You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.3.0")]
-[assembly: NeutralResourcesLanguageAttribute("en-US")]
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.4.0")]
