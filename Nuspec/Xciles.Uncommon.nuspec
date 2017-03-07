@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
 	<metadata>
 		<id>Xciles.Uncommon</id>
-		<version>1.9.3-beta</version>
+		<version>1.9.4-beta</version>
 		<title>Xciles.Uncommon</title>
 		<authors>Hans Harts</authors>
 		<owners>Hans Harts</owners>
@@ -12,6 +12,10 @@
 		<description>A common library for PCL containing useful 'helpers'.</description>
 		<tags>uncommon xamarin</tags>
 		<releaseNotes>
+1.9.4-beta
+Adding object extensions mainly for FormUrlposting
+Adding formurl encoding request serializer
+Chaning UseStringUrlPost to UseFormUrlEncoded
 1.9.3-beta
 Adding modernhttpclient for PCL projects
 Updating packages!
