@@ -226,6 +226,12 @@ namespace Xciles.Uncommon.Net
                         httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                     }
                     break;
+                case EUncommonRequestSerializer.UseStringUrlPost:
+                    {
+                        httpContent = new StringContent(requestContent.ToString());
+                        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+                    }
+                    break;
                 case EUncommonRequestSerializer.UseFormUrlEncoded:
                     {
                         var pairs = requestContent as IEnumerable<KeyValuePair<string, string>>;

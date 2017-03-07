@@ -6,6 +6,7 @@
         UseXmlSerializer,
         UseByteArray,
         UseJsonNet,
+        UseStringUrlPost,
         UseFormUrlEncoded
     }
 }
