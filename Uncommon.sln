@@ -1,19 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.Tests", "Uncommon.Tests\Uncommon.Tests.csproj", "{F8500B0F-34CB-4992-8C79-0CB8465AFAED}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{137F26F0-D664-4374-89D4-A6EB83C0930D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.Tests.Client", "Tests\Uncommon.Tests.Client\Uncommon.Tests.Client.csproj", "{31B7FB8D-F174-4C30-BC6B-EF75816A46C1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.Tests.Web", "Tests\Uncommon.Tests.Web\Uncommon.Tests.Web.csproj", "{D5C4488D-5F92-40D9-A94F-A5008013F2B8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MvvmCross", "MvvmCross", "{0DDF3E23-40D5-416A-A8AA-4312889E0E74}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{FCBA150D-CD22-43FE-A308-DA7C635D7C00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.Tests", "Uncommon.Tests\Uncommon.Tests.csproj", "{F8500B0F-34CB-4992-8C79-0CB8465AFAED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.Tests.Client", "Tests\Uncommon.Tests.Client\Uncommon.Tests.Client.csproj", "{31B7FB8D-F174-4C30-BC6B-EF75816A46C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.Tests.Web", "Tests\Uncommon.Tests.Web\Uncommon.Tests.Web.csproj", "{D5C4488D-5F92-40D9-A94F-A5008013F2B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.MvvmCross", "MvvmCross\Uncommon.MvvmCross\Uncommon.MvvmCross.csproj", "{D35D00A8-9E37-47C0-A318-AF51D79507BA}"
 EndProject
@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.MvvmCross.Plugins.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncommon.MvvmCross.Plugins.ProtectedStore.Touch", "MvvmCross\Plugins\ProtectedStore.Touch\Uncommon.MvvmCross.Plugins.ProtectedStore.Touch.csproj", "{55116CB5-9AC8-478D-A032-5357762463F8}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Uncommon", "Uncommon\Uncommon.xproj", "{25DA66A5-9BA4-4129-A6B0-EC8989EDDEF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uncommon", "Uncommon\Uncommon.csproj", "{25DA66A5-9BA4-4129-A6B0-EC8989EDDEF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -158,9 +158,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{FCBA150D-CD22-43FE-A308-DA7C635D7C00} = {0DDF3E23-40D5-416A-A8AA-4312889E0E74}
 		{31B7FB8D-F174-4C30-BC6B-EF75816A46C1} = {137F26F0-D664-4374-89D4-A6EB83C0930D}
 		{D5C4488D-5F92-40D9-A94F-A5008013F2B8} = {137F26F0-D664-4374-89D4-A6EB83C0930D}
-		{FCBA150D-CD22-43FE-A308-DA7C635D7C00} = {0DDF3E23-40D5-416A-A8AA-4312889E0E74}
 		{D35D00A8-9E37-47C0-A318-AF51D79507BA} = {0DDF3E23-40D5-416A-A8AA-4312889E0E74}
 		{3E9E5523-71F9-4B9A-9CC2-E3DB8AB5355C} = {FCBA150D-CD22-43FE-A308-DA7C635D7C00}
 		{9E1E2CA6-DB24-4814-A9D1-05B6B6B3101B} = {FCBA150D-CD22-43FE-A308-DA7C635D7C00}
