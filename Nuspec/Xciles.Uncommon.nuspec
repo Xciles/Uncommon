@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
 	<metadata>
 		<id>Xciles.Uncommon</id>
-		<version>1.9.5-beta</version>
+		<version>1.9.6-beta</version>
 		<title>Xciles.Uncommon</title>
 		<authors>Hans Harts</authors>
 		<owners>Hans Harts</owners>
@@ -12,6 +12,8 @@
 		<description>A common library for PCL containing useful 'helpers'.</description>
 		<tags>uncommon xamarin</tags>
 		<releaseNotes>
+1.9.6-beta
+Removing modernhttpclient because of compatibility issues...
 1.9.5-beta
 Adding back UseStringUrlPost
 1.9.4-beta
