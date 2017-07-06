@@ -4,7 +4,7 @@
     <Description>A common library for PCL containing useful 'helpers'.</Description>
     <AssemblyTitle>Xciles.Uncommon</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>1.9.6-beta</VersionPrefix>
+    <VersionPrefix>1.9.7-beta</VersionPrefix>
     <Authors>Hans Harts</Authors>
     <TargetFrameworks>netstandard1.1;portable45-net45+win8+wpa81</TargetFrameworks>
     <AssemblyName>Uncommon</AssemblyName>
